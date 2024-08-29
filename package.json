@@ -9,14 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@crowdin/crowdin-api-client": "^1.35.0",
+    "@supabase/supabase-js": "^2.45.1",
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "next": "14.2.5",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.0",
+    "preline": "^2.4.1",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.5"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "postcss": "^8",
+    "@eslint/js": "^9.9.0",
+    "eslint-config-next": "14.2.5",
+    "eslint-plugin-jsdoc": "^50.2.2",
+    "postcss": "^8.4.41",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "uuid": "^10.0.0"
   }
 }
