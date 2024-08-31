@@ -1,10 +1,14 @@
 import React from "react";
 import * as Supabase from "@supabase/supabase-js";
+import otaClient from "@crowdin/ota-client";
 
 import FooterLink from "./FooterLink";
+import FooterHeader from "./footerHeader";
 import StatusOrb from "./StatusOrb";
 
-export default async function Footer() {
+export default async function Footer({ lang }) {
+    const client = new otaClient('e7e5f0f98533e445ccd2b89t9ev');
+    const strings = await client.getStringsByLocale(lang);
     const supabase = Supabase.createClient(
         process.env.SUPABASE_URL,
         process.env.SUPABASE_KEY
@@ -16,15 +20,15 @@ export default async function Footer() {
             <div className="flex w-full max-w-6xl flex-col space-y-8 divide-y divide-neutral-700 px-8">
                 <div className="flex flex-col justify-between space-y-4 md:flex-row md:space-x-4 md:space-y-0">
                     <div className="flex flex-col space-y-2">
-                        <h2 className="select-none font-poppins text-xl font-medium">About</h2>
+                        <FooterHeader title={strings.footer.header.about} />
                         <div className="flex flex-col space-y-0">
-                            <FooterLink href="https://thefemdevs.com/about" text="About" />
-                            <FooterLink href="https://thefemdevs.com/team" text="Team" />
-                            <FooterLink href="https://thefemdevs.com/products" text="Products" />
+                            <FooterLink href="https://thefemdevs.com/about" text={strings.footer.links.about.about} />
+                            <FooterLink href="https://thefemdevs.com/team" text={strings.footer.links.about.team} />
+                            <FooterLink href="https://thefemdevs.com/products" text={strings.footer.links.about.products} />
                         </div>
                     </div>
                     <div className="flex flex-col space-y-2">
-                        <h2 className="select-none font-poppins text-xl font-medium">Community</h2>
+                        <FooterHeader title={strings.footer.header.community} />
                         <div className="flex flex-col space-y-0">
                             <FooterLink href="https://discord.gg/FgQvDW8jtr" text="Discord" />
                             <FooterLink href="https://x.com/officialfemdevs" text="Twitter" />
@@ -35,7 +39,7 @@ export default async function Footer() {
                         </div>
                     </div>
                     <div className="flex flex-col space-y-2">
-                        <h2 className="select-none font-poppins text-xl font-medium">Company</h2>
+                        <FooterHeader title={strings.footer.header.company} />
                         <div className="flex flex-col space-y-0">
                             <FooterLink href="https://thefemdevs.com/branding" text="Branding" />
                             <FooterLink href="https://thefemdevs.com/careers" text="Careers" />
@@ -43,7 +47,7 @@ export default async function Footer() {
                         </div>
                     </div>
                     <div className="flex flex-col space-y-2">
-                        <h2 className="select-none font-poppins text-xl font-medium">Legal</h2>
+                        <FooterHeader title={strings.footer.header.legal} />
                         <div className="flex flex-col space-y-0">
                             <FooterLink href="https://legal.thefemdevs.com/terms" text="Terms" />
                             <FooterLink href="https://legal.thefemdevs.com/privacy" text="Privacy" />
@@ -54,7 +58,7 @@ export default async function Footer() {
                 <div className="flex flex-row items-center justify-between pt-8">
                     <h2 className="select-none font-poppins text-lg">FemDevs &copy; 2024</h2>
                     <div className="flex flex-row items-center justify-center space-x-4">
-                        <StatusOrb state={status} />
+                        <StatusOrb state={status} translations={strings.status} />
                     </div>
                 </div>
             </div>
