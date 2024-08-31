@@ -53,7 +53,7 @@ function hash(val) {
 }
 
 export default async function Page({ params }) {
-    const client = new otaClient('e7e5f0f98533e445ccd2b89t9ev');
+    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const strings = await client.getStringsByLocale(params.lang);
     const supabase = Supabase.createClient(
         process.env.SUPABASE_URL,

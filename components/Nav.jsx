@@ -6,7 +6,7 @@ import otaClient from '@crowdin/ota-client';
 import NavLink from './NavLink';
 
 export default async function Nav({ lang }) {
-    const client = new otaClient('e7e5f0f98533e445ccd2b89t9ev');
+    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const strings = await client.getStringsByLocale(lang);
     return (
         <nav className="sticky top-0 z-30 flex flex-row items-center justify-center bg-white">

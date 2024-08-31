@@ -37,7 +37,7 @@ function SVG({ path }) {
 
 
 export default async function Page({ params }) {
-    const client = new otaClient('e7e5f0f98533e445ccd2b89t9ev');
+    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const strings = await client.getStringsByLocale(params.lang);
     return (
         <content className="flex flex-col items-center justify-center">
