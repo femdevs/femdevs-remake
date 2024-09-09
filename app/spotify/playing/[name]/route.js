@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation';
 import * as Supabase from '@supabase/supabase-js';
 import SpotifyWebAPI from 'spotify-web-api-node';
 
