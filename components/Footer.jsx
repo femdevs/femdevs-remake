@@ -1,20 +1,22 @@
 import React from "react";
 import * as Supabase from "@supabase/supabase-js";
+import UptimeClient from "#/src/uptime";
 import otaClient from "@crowdin/ota-client";
 
 import FooterLink from "./FooterLink";
-import FooterHeader from "./footerHeader";
+import FooterHeader from "./FooterHeader";
 import StatusOrb from "./StatusOrb";
 
 export default async function Footer({ lang }) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const strings = await client.getStringsByLocale(lang);
+    const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN);
+    const uptimeData = await uptimeClient.status();
     const supabase = Supabase.createClient(
         process.env.SUPABASE_URL,
         process.env.SUPABASE_KEY
     );
     const { data } = (await supabase.from("websitestatus").select("upstatus").limit(1).single());
-    const { upstatus: status } = data;
     return (
         <footer className="flex w-full justify-center bg-neutral-900 p-12 text-neutral-100">
             <div className="flex w-full max-w-6xl flex-col space-y-8 divide-y divide-neutral-700 px-8">
@@ -58,7 +60,7 @@ export default async function Footer({ lang }) {
                 <div className="flex flex-row items-center justify-between pt-8">
                     <h2 className="select-none font-poppins text-lg">FemDevs &copy; 2024</h2>
                     <div className="flex flex-row items-center justify-center space-x-4">
-                        <StatusOrb state={status} translations={strings.status} />
+                        <StatusOrb state={uptimeData.agrStatus} translations={strings.status} />
                     </div>
                 </div>
             </div>

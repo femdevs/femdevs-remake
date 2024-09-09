@@ -1,6 +1,6 @@
 {
-  "name": "femdevs-remake",
-  "version": "0.1.0",
+  "name": "femdevs-website",
+  "version": "5.0.0-beta1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,9 +8,58 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "main": "index.js",
+  "readme": "README.md",
+  "author": {
+    "name": "Benjamin",
+    "email": "therealbenpai@gmail.com",
+    "url": "https://ben.thefemdevs.com"
+  },
+  "contributors": [
+    {
+      "name": "Benjamin",
+      "email": "therealbenpai@gmail.com",
+      "url": "https://ben.thefemdevs.com"
+    },
+    {
+      "name": "Alex",
+      "email": "alex@thefemdevs.com",
+      "url": "https://alex.thefemdevs.com"
+    },
+    {
+      "name": "Oblong",
+      "email": "oblong@thefemdevs.com",
+      "url": "https://oblong.thefemdevs.com"
+    },
+    {
+      "name": "Nezha",
+      "email": "nezha@thefemdevs.com",
+      "url": "https://nezha.thefemdevs.com"
+    }
+  ],
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/therealbenpai"
+    },
+    {
+      "type": "organization",
+      "url": "https://donate.stripe.com/6oE3ge8OU6hS93OcMM"
+    }
+  ],
+  "license": "AGPL-3.0-or-later",
+  "description": "The official source code for the FemDevs website including all the subdomains.",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "dependencies": {
     "@crowdin/crowdin-api-client": "^1.35.0",
     "@crowdin/ota-client": "^1.1.3",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
     "@supabase/supabase-js": "^2.45.1",
     "@tailwindcss/forms": "^0.5.7",
     "autoprefixer": "^10.4.20",
@@ -20,14 +69,41 @@
     "postcss-import": "^16.1.0",
     "preline": "^2.4.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "@therealbenpai/webutils": "^1.2.0",
+    "@therealbenpai/zdcors": "^1.3.0",
+    "axios": "^1.6.8",
+    "bwip-js": "^4.4.0",
+    "firebase": "^10.12.2",
+    "firebase-admin": "^12.2.0",
+    "html-minifier-terser": "^7.2.0",
+    "nodemailer": "^6.9.13",
+    "ranjs": "^1.24.5",
+    "showdown": "^2.1.0",
+    "spotify-web-api-node": "^5.0.2",
+    "tailwindcss": "^3.3.3",
+    "whoiser": "^1.17.3",
+    "xml": "^1.0.1",
+    "yaml": "^2.4.5"
   },
   "devDependencies": {
+    "@types/showdown": "^2.0.6",
     "@eslint/js": "^9.9.0",
     "eslint-config-next": "14.2.5",
     "eslint-plugin-jsdoc": "^50.2.2",
     "postcss": "^8.4.41",
     "tailwindcss": "^3.4.1",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "@microsoft/eslint-formatter-sarif": "^3.1.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.19",
+    "@types/html-minifier-terser": "^7.0.2",
+    "@types/nodemailer": "^6.4.14",
+    "@types/ranjs": "^1.22.7",
+    "@types/spotify-api": "^0.0.25",
+    "@types/stripe": "^8.0.417",
+    "@types/xml": "^1.0.11",
+    "eslint": "^9.3.0"
   }
 }

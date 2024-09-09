@@ -3,6 +3,7 @@ import otaClient from '@crowdin/ota-client';
 
 import ServicesAbout from '#/components/ServicesAbout';
 import LFV from '#/components/LFV';
+import UptimeClient from '#/src/uptime';
 
 export async function generateMetadata({ params }) {
     return {
@@ -39,6 +40,8 @@ function SVG({ path }) {
 export default async function Page({ params }) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const strings = await client.getStringsByLocale(params.lang);
+    const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN);
+    const uptimeData = await uptimeClient.status();
     return (
         <content className="flex flex-col items-center justify-center">
             <main>
@@ -160,8 +163,8 @@ export default async function Page({ params }) {
             <hero className="flex w-full justify-center p-8 bg-white">
                 <div className="w-full max-w-6xl space-y-8 px-8">
                     <div className="grid grid-cols-1 items-center justify-center gap-4 md:grid-cols-2">
-                        <LFV val='13,000+' description={strings.home.clients} />
-                        <LFV val='99.7%' description={strings.home.uptime} />
+                        <LFV val={`${Intl.NumberFormat('en-GB').format(13e3)}+`} description={strings.home.clients} />
+                        <LFV val={`${(uptimeData.uptime * 100).toFixed(1)}%`} description={strings.home.uptime} />
                     </div>
                 </div>
             </hero>
