@@ -1,5 +1,4 @@
 import React from "react";
-import * as Supabase from "@supabase/supabase-js";
 import UptimeClient from "#/src/uptime";
 import otaClient from "@crowdin/ota-client";
 
@@ -12,11 +11,6 @@ export default async function Footer({ lang }) {
     const strings = await client.getStringsByLocale(lang);
     const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN);
     const uptimeData = await uptimeClient.status();
-    const supabase = Supabase.createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_KEY
-    );
-    const { data } = (await supabase.from("websitestatus").select("upstatus").limit(1).single());
     return (
         <footer className="flex w-full justify-center bg-neutral-900 p-12 text-neutral-100">
             <div className="flex w-full max-w-6xl flex-col space-y-8 divide-y divide-neutral-700 px-8">
