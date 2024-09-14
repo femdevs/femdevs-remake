@@ -60,11 +60,6 @@ class MailReqProcessor {
                         ...(url.hostname === 'thefemdevs.com' ? ['body>hero', 'body>div'] : []),
                     ].join(','),
                 ).forEach(element => element.remove());
-                if (url.hostname === 'thefemdevs.com')
-                    dom.querySelector('head').insertAdjacentHTML(
-                        'beforeend',
-                        `<style>${await fetch('https://cdn.thefemdevs.com/assets/css/d').then(res => res.text())}</style>`,
-                    );
                 return htmlMinifier.minify(dom.toString(), {
                     collapseBooleanAttributes: true,
                     collapseInlineTagWhitespace: true,

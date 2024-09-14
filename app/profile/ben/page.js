@@ -10,7 +10,7 @@ export default function Page() {
             <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-10">
                     <div className="p-6">
-                        <ProfileImage name="Benjamin" link="https://cdn.thefemdevs.com/assets/images/grav/329f481757ca49ce98d31d9041285a11" />
+                        <ProfileImage name="Benjamin" link="https://thefemdevs.com/assets/images/grav/329f481757ca49ce98d31d9041285a11" />
                         <h1 className="text-3xl font-bold mb-4 text-gray-800">About Me</h1>
                         <Description>
                             Hello! My name is Ben! I am a full stack developer who works on many applications.

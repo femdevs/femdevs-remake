@@ -64,7 +64,7 @@ export default async function Page({ params }) {
     data.forEach(staff => staffRoles[staff.role] = staffRoles[staff.role] || {});
     data.forEach((staff, index) => Object.assign(
         staffRoles[staff.role],
-        { [index]: { ...staff, avatarUrl: `https://cdn.thefemdevs.com/assets/images/team/${staff.userid}` } },
+        { [index]: { ...staff, avatarUrl: `https://thefemdevs.com/assets/images/team/${staff.userid}` } },
     ));
     return (
         <content className="flex flex-col items-center justify-center">

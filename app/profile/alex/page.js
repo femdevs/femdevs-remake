@@ -10,7 +10,7 @@ export default function Page() {
             <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-10">
                     <div className="p-6">
-                        <ProfileImage name="Alex" link="https://cdn.thefemdevs.com/assets/images/grav/ad7cc897aef0988a7f7039f16417008b" />
+                        <ProfileImage name="Alex" link="https://thefemdevs.com/assets/images/grav/ad7cc897aef0988a7f7039f16417008b" />
                         <h1 className="text-3xl font-bold mb-4 text-gray-800">About Me</h1>
                         <Description>
                             Hai, I&apos;m Alex! (She/They), an exceptionally silly 17 year old :3
