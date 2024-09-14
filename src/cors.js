@@ -1,4 +1,6 @@
-const caab = (v) => Array.isArray(v) && v;
+/* eslint-disable camelcase */
+/* eslint-disable id-length */
+const caab = v => Array.isArray(v) && v;
 
 class WebSecurity {
     static CSP = (...CSPs) => CSPs.reduce((acc, { key: k, none: n, directives: d, self: s, wildcard: w, domains: dm }) => `${acc} ${k.replace(/([A-Z])/g, '-$1').toLowerCase()}${(n) ? " 'none'" : `${(d.length > 0) ? ` ${d.map(i => `'${i}'`).join(' ')}` : ''}${(s) ? " 'self'" : ''}${(w) ? ' *' : ''}${(dm.length > 0) ? ` ${dm.join(' ')}` : ''}`}; `, '');
@@ -21,9 +23,9 @@ class WebSecurity {
     static ReportingEndpoints = (...data) => data.reduce((acc, ep) => acc += `${ep.id.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${ep.url}, `, '').slice(0, -2);
     static PermissionPolicy = (...data) => data.reduce((acc, { key, ...value }) => {
         const { none: n, self: s, wildcard: w, src, domains: d } = value;
-        return `${acc}${key.replace(/([A-Z])/g, '-$1').toLowerCase()}=${(w) ? '*' : `(${(n) ? '' : `${(s) ? "'self' " : ''}${(src) ? "'src' " : ''}${(caab(d)) ? d.map(v => `"${v}"`).join(' ') : ''}`.trim()})`}, `
+        return `${acc}${key.replace(/([A-Z])/g, '-$1').toLowerCase()}=${(w) ? '*' : `(${(n) ? '' : `${(s) ? "'self' " : ''}${(src) ? "'src' " : ''}${(caab(d)) ? d.map(v => `"${v}"`).join(' ') : ''}`.trim()})`}, `;
     }, '').slice(0, -2);
-    static CD = (domain) => Array.of(domain, `*.${domain} `);
+    static CD = domain => Array.of(domain, `*.${domain} `);
 }
 
 class CSPObj {
