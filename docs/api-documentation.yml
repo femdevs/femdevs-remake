@@ -1123,7 +1123,7 @@ paths:
                     message: "Unable to retrieve requested information"
       security:
         - APIToken: []
-  /minecraft/hive/maps:
+  /minecraft/hive/maps/:map:
     get:
       operationId: "GetHiveMaps"
       description: |-
@@ -1133,12 +1133,13 @@ paths:
         Permissions Required: `Minecraft::Hive.Map`
       summary: "Get Hive Maps"
       parameters:
-        - in: "header"
-          name: "x-game"
-          description: "The game to get maps for"
+        - in: "path"
+          name: "map"
+          description: "The game to get the maps for"
           schema:
             type: string
           example: "hide"
+          required: true
       responses:
         200:
           description: "The list of maps for the given game"
@@ -1793,173 +1794,6 @@ paths:
                   email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
                 status:
                   - Client Transfer Prohibited
-        400:
-          description: "Missing domain information"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-              examples:
-                Missing-Domain:
-                  value:
-                    code: 8
-                    message: "Missing Header Parameter(s)"
-                Invalid-Domain:
-                  value:
-                    code: 9
-                    message: "Invalid Header Parameter(s)"
-        401:
-          description: "Invalid/Missing API Token"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-              examples:
-                Missing-Token:
-                  summary: "Missing API Token"
-                  value:
-                    code: 3
-                    message: "No API key provided"
-                Invalid-Token:
-                  summary: "Invalid API Token"
-                  value:
-                    code: 4
-                    message: "Invalid API key provided"
-        403:
-          description: "Missing Permissions"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorData"
-              examples:
-                Missing-Permissions:
-                  value:
-                    code: 1
-                    message: "You are not authorized to access this resource"
-                Blacklisted:
-                  value:
-                    code: 2
-                    message: "You are blacklisted from accessing this resource"
-      security:
-        - APIToken: []
-  /whois/full:
-    get:
-      operationId: "GetFullWhois"
-      description: |-
-        Gets the full Whois information for the given domain.
-        Returns the information if successful, otherwise returns an error.
-
-        Permissions Required: `Whois::Full`
-      summary: "Get Full Whois"
-      parameters:
-        - in: "header"
-          name: "x-domain"
-          description: "The domain to get the full Whois information for"
-          schema:
-            type: string
-          example: "thefemdevs.com"
-      responses:
-        200:
-          description: "The full Whois information for the given domain"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WhoisFullData"
-              example:
-                whois:
-                  domainName: "THEFEMDEVS.COM"
-                  registrar: "Cloudflare, Inc."
-                  creationDate: "Unknown"
-                  expirationDate: "2024-07-17T14:59:48Z"
-                  updatedDate: "2023-07-24T19:03:11Z"
-                  registrant:
-                    name: "Unknown"
-                    organization: "Unknown"
-                    street: "Unknown"
-                    city: "Unknown"
-                    state: "MI"
-                    postalCode: "Unknown"
-                    country: "US"
-                    phone: "Unknown"
-                    fax: "Unknown"
-                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
-                  admin:
-                    name: "Unknown"
-                    organization: "Unknown"
-                    street: "Unknown"
-                    city: "Unknown"
-                    state: "Unknown"
-                    postalCode: "Unknown"
-                    country: "Unknown"
-                    phone: "Unknown"
-                    fax: "Unknown"
-                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
-                  tech:
-                    name: "Unknown"
-                    organization: "Unknown"
-                    street: "Unknown"
-                    city: "Unknown"
-                    state: "Unknown"
-                    postalCode: "Unknown"
-                    country: "Unknown"
-                    phone: "Unknown"
-                    fax: "Unknown"
-                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
-                  billing:
-                    name: "Unknown"
-                    organization: "Unknown"
-                    street: "Unknown"
-                    city: "Unknown"
-                    state: "Unknown"
-                    postalCode: "Unknown"
-                    country: "Unknown"
-                    phone: "Unknown"
-                    fax: "Unknown"
-                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
-                  status:
-                    - Client Transfer Prohibited
-                dns:
-                  A: "216.24.57.1"
-                  AAAA: ""
-                  CAA:
-                    - issuer: comodoca.com
-                      wild: true
-                      main: true
-                    - issuer: digicert.com; cansignhttpexchanges=yes
-                      wild: true
-                      main: true
-                    - issuer: letsencrypt.org
-                      wild: true
-                      main: true
-                    - issuer: pki.goog; cansignhttpexchanges=yes
-                      wild: true
-                      main: true
-                    - iodef: mailto:admin@thefemdevs.com
-                  CNAME: ""
-                  MX:
-                    - exchange: mx1.forwardemail.net
-                      priority: 10
-                    - exchange: mx2.forwardemail.net
-                      priority: 10
-                  NS:
-                    - otto.ns.cloudflare.com
-                    - maxine.ns.cloudflare.com
-                  PTR: []
-                  SOA:
-                    nsname: maxine.ns.cloudflare.com
-                    hostname: dns.cloudflare.com
-                    serial: 2337847618
-                    refresh: 10000
-                    retry: 2400
-                    expire: 604800
-                    minttl: 3600
-                  SRV: []
-                  TXT:
-                    - MS=ms65022032
-                    - forward-email-site-verification=wS0G9jNYte
-                    - v=spf1 a include:spf.forwardemail.net -all
-                    - Probely=e85c9999-19d4-4716-9ee7-609f74a9ce3f
-                    - google-site-verification=XuaaPNYTdBARR5O3md_9vZhFJDR98v66oKNOWVfRIEY        
         400:
           description: "Missing domain information"
           content:
