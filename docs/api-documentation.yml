@@ -1,0 +1,3494 @@
+openapi: "3.0.0"
+info:
+  version: "5.0.0"
+  title: "FemDevs API Documentation"
+  description: |-
+    The documentation for the FemDevs API.
+    Do note that some routes have permission-based requirements that your user must be qualified for in order to access them.
+    Check the description for each route in case you are unsure.
+
+    Permissions Overrides:
+
+    The following permissions will bypass all permissions unless its marked otherwise:
+    * `Global::Role.Developer`
+    * `Global::Role.Administrator`
+    * `Global::Role.Owner`
+
+    It is also always recommended that you append a query parameter of `?type=json` to each request to ensure that all requests are returned as a JSON object
+  termsOfService: "https://thefemdevs.com/legal/terms"
+  contact:
+    name: "FemDevs"
+    url: "https://thefemdevs.com"
+    email: "support@thefemdevs.com"
+  license:
+    name: "GNU Affero General Public License v3.0"
+    url: "https://www.gnu.org/licenses/agpl-3.0.en.html"
+servers:
+  - url: "https://thefemdevs.com/api"
+    description: "Production Server"
+paths:
+  /barcode/gen/:codec:
+    get:
+      operationId: "GenerateBarcode"
+      description: |-
+        Generates a barcode with the given codec and data.
+        Returns the barcode if successful, otherwise returns an error.
+
+        Permissions Required: `Barcode::Generate`
+      summary: "Generate Barcode"
+      parameters:
+        - in: "path"
+          name: "codec"
+          description: "The codec to use for the barcode"
+          schema:
+            $ref: "#/components/schemas/BarcodeType"
+          example: "code128"
+          required: true
+        - in: query
+          name: "content"
+          description: "The data to encode in the barcode"
+          schema:
+            type: string
+          example: "Hello, World!"
+          required: true
+        - in: header
+          name: "x-format"
+          description: "The format to return the barcode in"
+          schema:
+            type: string
+            enum:
+              - png
+              - svg
+          example: "png"
+      responses:
+        200:
+          description: "The barcode for the given data"
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/svg+xml:
+              schema:
+                type: string
+                format: binary
+        400:
+          description: "Missing barcode information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Query-Data:
+                  value:
+                    code: 6
+                    message: "Missing Query Parameter(s)"
+                Invalid-Query-Data:
+                  value:
+                    code: 7
+                    message: "Invalid Query Parameter(s)"
+                Missing-Header-Data:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Header-Data:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        500:
+          description: "Unable to generate barcode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 0
+                    message: "Unknown error occurred"
+      security:
+        - APIToken: []
+  /crypto/enc:
+    get:
+      operationId: "CryptographyEnc"
+      description: |-
+        API Endpoint for encrypting data
+
+        Permissions Required: `Cryptography::Encrypt`
+      summary: "Encryption Endpoint"
+      parameters:
+        - in: "query"
+          name: "data"
+          description: "The data to encrypt"
+          example: "testing"
+          schema:
+            type: string
+      responses:
+        200:
+          description: "The Encrypted Data"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                data:
+                  summary: "Encrypted Data"
+                  value: "Pc6W8_h9XSg8LVhZ8yAP4vtui0sJIMNmC_E18ee9JBQyEmBPLZBDz5Jx745u31Pbr2EkS9Z2S8oFB02uwzpWtt3PH48HE-Wj27VkpvV1glrpZ0f_cW0Ema-gT-6S675xCgb9cy0ZTx3rH-kzuVZXaOwrMjMJTVe7ZpyH8zyUNHnDo0xvkhq9Z523azZm1mq1rcJWMJl8iCuZc6TQp5E2-4xiAZF59ZCZyQCtzxryPzX6aR5ENBvBVdkOaNWtmjWc9ZM5Ni9PXc2cVGbi5IDo6RvX5KuU2DUvGpIKvf15xLptPXZPLNtU4syXjXI4vA03EpV1-Dqs6H7FrtXLAu9M5Q7NxaSxynr4oyJC7CzIXJtJVUwrFN9I-zSJCcR9rE90XzolaWICUjfhSkMtPBTkr_ibNFcyPhG-oaMPGuc1Hb8gJzEDDtWTGPZdV2rbGJIw3XBi_h80fj8F_DQujSGsbo2DmBwSF-PZtKG5WHK9cf3rWCIxF1Sc5Hhkd-HnhrFrSv30Kjvede88MmofhchsS9cEn4eFF7rfj35blLBxGKBKzhS0k_k7FWQznK6J24lfUR_Gtkz3IJlTcqQN-ixucjHdI58xheVETAg_PkK3KZIwgabxQRSz96JUANyEPIPdodIF2f4PpEMomjYp8mCc_0F26uUSgsm9_LcJvC9oNZU"
+        400:
+          description: "Error With Encryption (Client Caused)"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                no-data:
+                  summary: "Missing Data Parameter"
+                  value:
+                    code: 6
+                    message: "Missing Query Parameter(s)"
+                invalid-data:
+                  summary: "Invalid Data Parameter"
+                  value:
+                    code: 7
+                    message: "Invalid Query Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        500:
+          description: "Error With Encryption (Server Caused)"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 12
+                    message: "Unable to encrypt data"
+      security:
+        - APIToken: []
+  /crypto/dec:
+    get:
+      operationId: "CryptographyDecr"
+      description: |-
+        API Endpoint for decrypting data
+
+        Permissions Required: `Cryptography::Decrypt`
+      summary: "Decryption Endpoint"
+      parameters:
+        - in: "query"
+          name: "data"
+          description: "The data to decrypt"
+          schema:
+            type: string
+          example: 'Pc6W8_h9XSg8LVhZ8yAP4vtui0sJIMNmC_E18ee9JBQyEmBPLZBDz5Jx745u31Pbr2EkS9Z2S8oFB02uwzpWtt3PH48HE-Wj27VkpvV1glrpZ0f_cW0Ema-gT-6S675xCgb9cy0ZTx3rH-kzuVZXaOwrMjMJTVe7ZpyH8zyUNHnDo0xvkhq9Z523azZm1mq1rcJWMJl8iCuZc6TQp5E2-4xiAZF59ZCZyQCtzxryPzX6aR5ENBvBVdkOaNWtmjWc9ZM5Ni9PXc2cVGbi5IDo6RvX5KuU2DUvGpIKvf15xLptPXZPLNtU4syXjXI4vA03EpV1-Dqs6H7FrtXLAu9M5Q7NxaSxynr4oyJC7CzIXJtJVUwrFN9I-zSJCcR9rE90XzolaWICUjfhSkMtPBTkr_ibNFcyPhG-oaMPGuc1Hb8gJzEDDtWTGPZdV2rbGJIw3XBi_h80fj8F_DQujSGsbo2DmBwSF-PZtKG5WHK9cf3rWCIxF1Sc5Hhkd-HnhrFrSv30Kjvede88MmofhchsS9cEn4eFF7rfj35blLBxGKBKzhS0k_k7FWQznK6J24lfUR_Gtkz3IJlTcqQN-ixucjHdI58xheVETAg_PkK3KZIwgabxQRSz96JUANyEPIPdodIF2f4PpEMomjYp8mCc_0F26uUSgsm9_LcJvC9oNZU'
+      responses:
+        200:
+          description: "The Decrypted Data"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                data:
+                  summary: "Decrypted Data"
+                  value: "testing"
+        400:
+          description: "Error with Decryption (Client Caused)"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                no-data:
+                  summary: "Missing Data Parameter"
+                  value:
+                    code: 6
+                    message: "Missing Query Parameter(s)"
+                invalid-data:
+                  summary: "Invalid Data Parameter"
+                  value:
+                    code: 7
+                    message: "Invalid Query Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        500:
+          description: "Error with Decryption (Server Caused)"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 13
+                    message: "Unable to decrypt data"
+      security:
+        - APIToken: []
+  /facts/dog:
+    get:
+      operationId: "GetDogFact"
+      description: |-
+        Gets a random dog fact.
+        Returns the fact if successful, otherwise returns an error.
+
+        Permissions Required: `Facts::Dog`
+      summary: "Get Dog Fact"
+      responses:
+        200:
+          description: "The dog fact"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                fact:
+                  value: "Dogs have a sense of time. It's been proven that they know the difference between a hour and five. If conditioned to, they can predict future events, such as regular walk times."
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /facts/cat:
+    get:
+      operationId: "GetCatFact"
+      description: |-
+        Gets a random cat fact.
+        Returns the fact if successful, otherwise returns an error.
+
+        Permissions Required: `Facts::Cat`
+      summary: "Get Cat Fact"
+      responses:
+        200:
+          description: "The cat fact"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                fact:
+                  value: "Cats can't taste sweetness."
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /facts/chucknorris:
+    get:
+      operationId: "GetChuckNorrisFact"
+      description: |-
+        Gets a random Chuck Norris fact.
+        Returns the fact if successful, otherwise returns an error.
+
+        Permissions Required: `Facts::ChuckNorris`
+      summary: "Get Random Chuck Norris Fact"
+      responses:
+        200:
+          description: "The random Chuck Norris fact"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                fact:
+                  value: "Chuck Norris can divide by zero."
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /location/coords:
+    get:
+      operationId: "GetLocationByCoords"
+      description: |-
+        Gets the location for the given coordinates.
+        Returns the location if successful, otherwise returns an error.
+
+        Permissions Required: `Location::Coord`
+      summary: "Get Location By Coordinates"
+      parameters:
+        - in: "header"
+          name: "x-coordpair"
+          description: "The coordinates to get the location for"
+          schema:
+            type: string
+          example: "38.8976633,-77.0365739"
+      responses:
+        200:
+          description: "The location for the given coordinates"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+              examples:
+                location:
+                  value:
+                    address:
+                      houseNumber: "1600"
+                      street: "Pennsylvania Avenue Northwest"
+                      city: "Washington"
+                      state: "District of Columbia"
+                      country: "United States"
+                      postalCode: "20500"
+                    coords:
+                      lat: 38.8976633
+                      lng: -77.0365739
+                    pluscode: "87G8P9CJ+XQ"
+        400:
+          description: "Missing coordinates information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Coordinates:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Coordinates:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        404:
+          description: "Error with the given coordinates"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 22
+                    message: "Unable to retrieve requested information"
+      security:
+        - APIToken: []
+  /location/pluscode:
+    get:
+      operationId: "GetLocationByPlusCode"
+      description: |-
+        Gets the location for the given plus code.
+        Returns the location if successful, otherwise returns an error.
+
+        Permissions Required: `Location::Pluscode`
+      summary: "Get Location By Plus Code"
+      parameters:
+        - in: "header"
+          name: "x-pluscode"
+          description: "The pluscode"
+          schema:
+            type: string
+          example: "87G8P9CJ+XQ"
+      responses:
+        200:
+          description: "The location for the given pluscode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+              examples:
+                location:
+                  value:
+                    address:
+                      houseNumber: "1600"
+                      street: "Pennsylvania Avenue Northwest"
+                      city: "Washington"
+                      state: "District of Columbia"
+                      country: "United States"
+                      postalCode: "20500"
+                    coords:
+                      lat: 38.8976633
+                      lng: -77.0365739
+                    pluscode: "87G8P9CJ+XQ"
+        400:
+          description: "Missing pluscode information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Pluscode:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Pluscode:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        404:
+          description: "Error with the given pluscode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 22
+                    message: "Unable to retrieve requested information"
+      security:
+        - APIToken: []
+  /location/address:
+    get:
+      operationId: "GetLocationByAddress"
+      description: |-
+        Gets the location for the given address.
+        Returns the location if successful, otherwise returns an error.
+
+        Permissions Required: `Location::Address`
+      summary: "Get Location By Address"
+      parameters:
+        - in: "header"
+          name: "x-address"
+          description: "The address to get the location for"
+          schema:
+            type: string
+          example: "1600 Pennsylvania Avenue Northwest, Washington, District of Columbia, United States, 20500"
+      responses:
+        200:
+          description: "The location for the given address"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationData"
+              examples:
+                location:
+                  value:
+                    address:
+                      houseNumber: "1600"
+                      street: "Pennsylvania Avenue Northwest"
+                      city: "Washington"
+                      state: "District of Columbia"
+                      country: "United States"
+                      postalCode: "20500"
+                    coords:
+                      lat: 38.8976633
+                      lng: -77.0365739
+                    pluscode: "87G8P9CJ+XQ"
+        400:
+          description: "Missing address information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Address:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Address:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        404:
+          description: "Error with the given address"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 22
+                    message: "Unable to retrieve requested information"
+      security:
+        - APIToken: []
+  /mail/send:
+    post:
+      operationId: "SendEmail"
+      description: |-
+        Sends an email to the given recipient.
+        Returns a success message if successful, otherwise returns an error.
+
+        Permissions Required: Manager Role (Dev, Admin, or Owner)
+      summary: "Send an Email"
+      parameters:
+        - in: "header"
+          name: 'x-user'
+          required: true
+          description: "The Account Credentials used to send the email"
+          example: "XQGdt1KLapMtFZqGCdzyLw.xcWtsV5Xb4T-yEE0lHtLyC60JC4"
+          schema:
+            type: string
+        - in: "header"
+          name: "x-from"
+          required: true
+          description: |-
+            The information of the sender to be included in the message (sender's name, sender's email address, etc)
+
+            Syntax: `n:NAME;a:ADDRESS;r:REPLYTOADDRESS`
+          example: 'n:Example User;a:main@example.com;r:replyto@example.com'
+          schema:
+            type: string
+      requestBody:
+        description: "The email information to send"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailRequest"
+            examples:
+              Plain-Text:
+                value:
+                  to: "user@example.com"
+                  subject: "Test"
+                  text: "This is a test email"
+              HTML:
+                value:
+                  to: "user@example.com"
+                  subject: "Test"
+                  html: "<h1>This is a test email</h1>"
+              Link:
+                value:
+                  to: "user@example.com"
+                  subject: "Test"
+                  url: "https://example.com"         
+      responses:
+        200:
+          description: "Ok Response"
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                Good:
+                  value: "OK"
+        400:
+          description: "Missing Body Parameter(s)"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Headers:
+                  summary: "Missing Header Parameter(s)"
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Missing-Body:
+                  summary: "Missing Body Parameter(s)"
+                  value:
+                    code: 10
+                    message: "Missing Body Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        500:
+          description: "Error sending email"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 0
+                    message: "An unknown error occurred"
+      security:
+        - APIToken: []
+  /minecraft/hive/player:
+    get:
+      operationId: "GetHivePlayer"
+      description: |-
+        Gets the player information for the given username.
+        Returns the player information if the player exists, otherwise returns an error.
+
+        Permissions Required: `Minecraft::Hive.Player`
+      summary: "Get Hive Player Info"
+      parameters:
+        - in: "header"
+          name: "x-user"
+          description: "The Minecraft username of the player to get information for"
+          schema:
+            type: string
+          example: "therealbenpai"
+      responses:
+        200:
+          description: "The player information for the given username"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MinecraftHivePlayerCombinedData"
+              examples:
+                user:
+                  value:
+                    hide:
+                      xp: 1612
+                      played: 13
+                      victories: 3
+                      first_played: 1600464717
+                      deaths: 9
+                      hider_kills: 28
+                      seeker_kills: 2
+                    main:
+                      xuid: 2535441321443031
+                      username: therealbenpai
+                      username_cc: therealbenpai
+                      rank: REGULAR
+                      first_played: 1597106900
+                      daily_login_streak: 0
+                      longest_daily_login_streak: 6
+                      hub_title_count: 6
+                      hub_title_unlocked:
+                        - "&cThe Short Sighted"
+                        - "&cThe Defender"
+                        - "&eAir &aSwimmer"
+                        - "&aThe Good Citizen"
+                        - "&aThe Snail"
+                        - "&eClickety &6Clack"
+                      avatar_count: 6
+                      avatar_unlocked:
+                        - url: https://cdn.playhive.com/avatars/monster-drew.png
+                          name: Drew (Monster)
+                        - url: https://cdn.playhive.com/avatars/pet-endolotl.png
+                          name: Endolotl Pet
+                        - url: https://cdn.playhive.com/avatars/monster-harper.png
+                          name: Harper (Monster)
+                        - url: https://cdn.playhive.com/avatars/monster-reese.png
+                          name: Reese (Monster)
+                        - url: https://cdn.playhive.com/avatars/monster-riley.png
+                          name: Riley (Monster)
+                        - url: https://cdn.playhive.com/avatars/grav-zoomies.png
+                          name: Zoomies
+                      costume_count: 0
+                      friend_count: 8
+                      equipped_hub_title: "&eClickety &6Clack"
+                      equipped_avatar:
+                        url: https://cdn.playhive.com/avatars/grav-zoomies.png
+                        name: Zoomies
+                      quest_count: 20
+                      pets:
+                        - Rock
+                        - Endolotl
+                      mounts: []
+                      hats: []
+                    dr:
+                      xp: 4248
+                      played: 46
+                      victories: 31
+                      first_played: 1694643520
+                      deaths: 203
+                      checkpoints: 264
+                      activated: 76
+                      kills: 86
+                    wars:
+                      xp: 1160
+                      played: 27
+                      first_played: 1612317414
+                      final_kills: 5
+                      kills: 27
+                      treasure_destroyed: 19
+                      deaths: 82
+                      victories: 1
+                    murder:
+                      xp: 16914
+                      played: 420
+                      victories: 308
+                      first_played: 1597106959
+                      deaths: 192
+                      coins: 3193
+                      murders: 170
+                      murderer_eliminations: 22
+                    sg:
+                      xp: 65
+                      played: 6
+                      first_played: 1615497464
+                      crates: 40
+                      kills: 6
+                      deaths: 6
+                      cows: 1
+                    sky:
+                      xp: 320
+                      played: 27
+                      victories: 5
+                      first_played: 1612392245
+                      ores_mined: 551
+                      deaths: 20
+                      kills: 5
+                      mystery_chests_destroyed: 1
+                      spells_used: 10
+                    ctf:
+                      xp: 143
+                      played: 3
+                      victories: 1
+                      first_played: 1694295639
+                      assists: 4
+                      deaths: 7
+                      flags_captured: 0
+                      kills: 6
+                      flags_returned: 1
+                    drop:
+                      xp: 65
+                      played: 1
+                      first_played: 1694288117
+                      blocks_destroyed: 506
+                      powerups_collected: 0
+                      vaults_used: 0
+                      deaths: 1
+                    ground:
+                      xp: 0
+                      played: 0
+                      victories: 0
+                      first_played: 0
+                      blocks_destroyed: 0
+                      powerups_collected: 0
+                      vaults_used: 0
+                      deaths: 0
+                    build:
+                      xp: 10
+                      played: 2
+                      first_played: 1597107129
+                      rating_good_received: 5
+                      rating_love_received: 0
+                      rating_meh_received: 4
+                      rating_okay_received: 1
+                      rating_great_received: 0
+                    party:
+                      xp: 1072
+                      played: 35
+                      victories: 2
+                      first_played: 1687883920
+                      powerups_collected: 55
+                      rounds_survived: 284
+                    bridge:
+                      xp: 0
+                      first_played: 0
+                    grav:
+                      xp: 658
+                      played: 21
+                      victories: 7
+                      first_played: 1694283594
+                      deaths: 413
+                      maps_completed: 57
+                      maps_completed_without_dying: 15
+        400:
+          description: "Missing user information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-User:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-User:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        404:
+          description: "Error with the given username"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 22
+                    message: "Unable to retrieve requested information"
+      security:
+        - APIToken: []
+  /minecraft/hive/maps:
+    get:
+      operationId: "GetHiveMaps"
+      description: |-
+        Gets the list of maps for the given game.
+        Returns the list of maps if the game exists, otherwise returns an error.
+
+        Permissions Required: `Minecraft::Hive.Map`
+      summary: "Get Hive Maps"
+      parameters:
+        - in: "header"
+          name: "x-game"
+          description: "The game to get maps for"
+          schema:
+            type: string
+          example: "hide"
+      responses:
+        200:
+          description: "The list of maps for the given game"
+          content:
+            application/json:
+              schema:
+                type: array
+                maxItems: 100
+                items:
+                  type: object
+                  $ref: "#/components/schemas/MinecraftHiveMapData"
+              examples:
+                maps:
+                  value:
+                    - name: Chroma
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_chroma.jpg
+                    - name: Eso Hotel
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_esohotel.jpg
+                    - name: Manor
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_manor.jpg
+                    - name: Museum
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_museum.jpg
+                    - name: Office Party
+                      season: WINTERFEST
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_office.winterfest.jpg
+                    - name: Office
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_office.jpg
+                    - name: Pigment
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_pigment.jpg
+                    - name: Remnants
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_remnants.jpg
+                    - name: Spaceship
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_spaceship.jpg
+                    - name: Ghost House
+                      season: HALLOWEEN
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_toyhouse.halloween.jpg
+                    - name: Toy House
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_toyhouse.jpg
+                    - name: Village
+                      season: WINTERFEST
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_village.winterfest.jpg
+                    - name: Warehouse
+                      season: NO_SEASON
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_warehouse.jpg
+                    - name: Witch School
+                      season: HALLOWEEN
+                      variant: REGULAR
+                      image: https://cdn.playhive.com/maps/mm_witchschool.halloween.jpg
+        400:
+          description: "Missing game information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Game:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Game:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        404:
+          description: "Error with the given game"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 22
+                    message: "Unable to retrieve requested information"
+      security:
+        - APIToken: []
+  /password/gen:
+    get:
+      operationId: "GeneratePassword"
+      description: |-
+        Generates a random password using default Apple syntax.
+
+        Permissions Required: `Password::Generate`
+      summary: "Generate a Password"
+      responses:
+        200:
+          description: "Ok Response"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - password
+                properties:
+                  password:
+                    type: string
+                    nullable: false
+                    description: "The generated password"
+              examples:
+                Good:
+                  value:
+                    password: uskAcg-efm5bc-sdsnot
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        500:
+          description: "Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 0
+                    message: "An unknown error occurred"
+      security:
+        - APIToken: []
+  /phone/details:
+    get:
+      operationId: "GetPhoneDetails"
+      description: |-
+        Gets the details for the given phone number.
+        Returns the details if successful, otherwise returns an error.
+
+        Permissions Required: `Phone::Lookup`
+      summary: "Get Phone Details"
+      parameters:
+        - in: "header"
+          name: "x-number"
+          description: "The phone number to get the details for"
+          schema:
+            type: string
+          example: "+8888888888"
+      responses:
+        200:
+          description: "The details for the given phone number"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PhoneNumberData"
+              examples:
+                details:
+                  value:
+                    status: "success"
+                    phone: "+8888888888"
+                    phone_valid: true
+                    phone_type: "fixed_line_or_mobile"
+                    phone_region: "Michigan"
+                    country: "United States"
+                    country_code: "US"
+                    country_prefix: "1"
+                    international_number: "+1 888-888-888"
+                    local_number: "(888) 888-8888"
+                    e164: "+18888888888"
+                    carrier: ""
+        400:
+          description: "Missing phone number information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Phone:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Phone:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+        404:
+          description: "Error with the given phone number"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                error:
+                  value:
+                    code: 22
+                    message: "Unable to retrieve requested information"
+      security:
+        - APIToken: []
+  /quotes/kanye:
+    get:
+      operationId: "GetKanyeQuote"
+      description: |-
+        Gets a random Kanye West quote.
+        Returns the quote if successful, otherwise returns an error.
+
+        Permissions Required: `Quote::Kanye`
+      summary: "Get Kanye Quote"
+      responses:
+        200:
+          description: "The Kanye West quote"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                quote:
+                  value: "I feel like I'm too busy writing history to read it."
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /quotes/ronswanson:
+    get:
+      operationId: "GetRonSwansonQuote"
+      description: |-
+        Gets a random Ron Swanson quote.
+        Returns the quote if successful, otherwise returns an error.
+
+        Permissions Required: `Quote::RonSwanson`
+      summary: "Get Ron Swanson Quote"
+      responses:
+        200:
+          description: "The Ron Swanson quote"
+          content:
+            plain/text:
+              schema:
+                type: string
+              examples:
+                quote:
+                  value: "There's only one thing I hate more than lying: skim milk. Which is water that's lying about being milk."
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /quotes/random:
+    get:
+      operationId: "GetRandomQuote"
+      description: |-
+        Gets a random quote.
+        Returns the quote if successful, otherwise returns an error.
+
+        Permissions Required: `Quote::Random`
+      summary: "Get Random Quote"
+      responses:
+        200:
+          description: "The random quote"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteData"
+              examples:
+                quote:
+                  value:
+                    quote: "The best way to predict the future is to create it."
+                    author: "Abraham Lincoln"
+                    tags:
+                      - "future"
+                      - "inspire"
+                      - "life"
+                      - "wisdom"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /whois/dns:
+    get:
+      operationId: "GetDNSWhois"
+      description: |-
+        Gets the DNS Whois information for the given domain.
+        Returns the information if successful, otherwise returns an error.
+
+        Permissions Required: `Whois::DNS`
+      summary: "Get DNS Whois"
+      parameters:
+        - in: "header"
+          name: "x-domain"
+          description: "The domain to get the DNS Whois information for"
+          schema:
+            type: string
+          example: "thefemdevs.com"
+      responses:
+        200:
+          description: "The DNS Whois information for the given domain"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WhoisDNSData"
+              example:
+                A: "216.24.57.1"
+                AAAA: ""
+                CAA:
+                  - issuer: comodoca.com
+                    wild: true
+                    main: true
+                  - issuer: digicert.com; cansignhttpexchanges=yes
+                    wild: true
+                    main: true
+                  - issuer: letsencrypt.org
+                    wild: true
+                    main: true
+                  - issuer: pki.goog; cansignhttpexchanges=yes
+                    wild: true
+                    main: true
+                  - iodef: mailto:admin@thefemdevs.com
+                CNAME: ""
+                MX:
+                  - exchange: mx1.forwardemail.net
+                    priority: 10
+                  - exchange: mx2.forwardemail.net
+                    priority: 10
+                NS:
+                  - otto.ns.cloudflare.com
+                  - maxine.ns.cloudflare.com
+                PTR: []
+                SOA:
+                  nsname: maxine.ns.cloudflare.com
+                  hostname: dns.cloudflare.com
+                  serial: 2337847618
+                  refresh: 10000
+                  retry: 2400
+                  expire: 604800
+                  minttl: 3600
+                SRV: []
+                TXT:
+                  - MS=ms65022032
+                  - forward-email-site-verification=wS0G9jNYte
+                  - v=spf1 a include:spf.forwardemail.net -all
+                  - Probely=e85c9999-19d4-4716-9ee7-609f74a9ce3f
+                  - google-site-verification=XuaaPNYTdBARR5O3md_9vZhFJDR98v66oKNOWVfRIEY
+        400:
+          description: "Missing domain information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Domain:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Domain:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /whois/whois:
+    get:
+      operationId: "GetWhois"
+      description: |-
+        Gets the Whois information for the given domain.
+        Returns the information if successful, otherwise returns an error.
+
+        Permissions Required: `Whois::Whois`
+      summary: "Get Whois"
+      parameters:
+        - in: "header"
+          name: "x-domain"
+          description: "The domain to get the Whois information for"
+          schema:
+            type: string
+          example: "thefemdevs.com"
+      responses:
+        200:
+          description: "The Whois information for the given domain"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WhoisData"
+              example:
+                domainName: "THEFEMDEVS.COM"
+                registrar: "Cloudflare, Inc."
+                creationDate: "Unknown"
+                expirationDate: "2024-07-17T14:59:48Z"
+                updatedDate: "2023-07-24T19:03:11Z"
+                registrant:
+                  name: "Unknown"
+                  organization: "Unknown"
+                  street: "Unknown"
+                  city: "Unknown"
+                  state: "MI"
+                  postalCode: "Unknown"
+                  country: "US"
+                  phone: "Unknown"
+                  fax: "Unknown"
+                  email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                admin:
+                  name: "Unknown"
+                  organization: "Unknown"
+                  street: "Unknown"
+                  city: "Unknown"
+                  state: "Unknown"
+                  postalCode: "Unknown"
+                  country: "Unknown"
+                  phone: "Unknown"
+                  fax: "Unknown"
+                  email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                tech:
+                  name: "Unknown"
+                  organization: "Unknown"
+                  street: "Unknown"
+                  city: "Unknown"
+                  state: "Unknown"
+                  postalCode: "Unknown"
+                  country: "Unknown"
+                  phone: "Unknown"
+                  fax: "Unknown"
+                  email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                billing:
+                  name: "Unknown"
+                  organization: "Unknown"
+                  street: "Unknown"
+                  city: "Unknown"
+                  state: "Unknown"
+                  postalCode: "Unknown"
+                  country: "Unknown"
+                  phone: "Unknown"
+                  fax: "Unknown"
+                  email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                status:
+                  - Client Transfer Prohibited
+        400:
+          description: "Missing domain information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Domain:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Domain:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+  /whois/full:
+    get:
+      operationId: "GetFullWhois"
+      description: |-
+        Gets the full Whois information for the given domain.
+        Returns the information if successful, otherwise returns an error.
+
+        Permissions Required: `Whois::Full`
+      summary: "Get Full Whois"
+      parameters:
+        - in: "header"
+          name: "x-domain"
+          description: "The domain to get the full Whois information for"
+          schema:
+            type: string
+          example: "thefemdevs.com"
+      responses:
+        200:
+          description: "The full Whois information for the given domain"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WhoisFullData"
+              example:
+                whois:
+                  domainName: "THEFEMDEVS.COM"
+                  registrar: "Cloudflare, Inc."
+                  creationDate: "Unknown"
+                  expirationDate: "2024-07-17T14:59:48Z"
+                  updatedDate: "2023-07-24T19:03:11Z"
+                  registrant:
+                    name: "Unknown"
+                    organization: "Unknown"
+                    street: "Unknown"
+                    city: "Unknown"
+                    state: "MI"
+                    postalCode: "Unknown"
+                    country: "US"
+                    phone: "Unknown"
+                    fax: "Unknown"
+                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                  admin:
+                    name: "Unknown"
+                    organization: "Unknown"
+                    street: "Unknown"
+                    city: "Unknown"
+                    state: "Unknown"
+                    postalCode: "Unknown"
+                    country: "Unknown"
+                    phone: "Unknown"
+                    fax: "Unknown"
+                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                  tech:
+                    name: "Unknown"
+                    organization: "Unknown"
+                    street: "Unknown"
+                    city: "Unknown"
+                    state: "Unknown"
+                    postalCode: "Unknown"
+                    country: "Unknown"
+                    phone: "Unknown"
+                    fax: "Unknown"
+                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                  billing:
+                    name: "Unknown"
+                    organization: "Unknown"
+                    street: "Unknown"
+                    city: "Unknown"
+                    state: "Unknown"
+                    postalCode: "Unknown"
+                    country: "Unknown"
+                    phone: "Unknown"
+                    fax: "Unknown"
+                    email: "https://domaincontact.cloudflareregistrar.com/thefemdevs.com"
+                  status:
+                    - Client Transfer Prohibited
+                dns:
+                  A: "216.24.57.1"
+                  AAAA: ""
+                  CAA:
+                    - issuer: comodoca.com
+                      wild: true
+                      main: true
+                    - issuer: digicert.com; cansignhttpexchanges=yes
+                      wild: true
+                      main: true
+                    - issuer: letsencrypt.org
+                      wild: true
+                      main: true
+                    - issuer: pki.goog; cansignhttpexchanges=yes
+                      wild: true
+                      main: true
+                    - iodef: mailto:admin@thefemdevs.com
+                  CNAME: ""
+                  MX:
+                    - exchange: mx1.forwardemail.net
+                      priority: 10
+                    - exchange: mx2.forwardemail.net
+                      priority: 10
+                  NS:
+                    - otto.ns.cloudflare.com
+                    - maxine.ns.cloudflare.com
+                  PTR: []
+                  SOA:
+                    nsname: maxine.ns.cloudflare.com
+                    hostname: dns.cloudflare.com
+                    serial: 2337847618
+                    refresh: 10000
+                    retry: 2400
+                    expire: 604800
+                    minttl: 3600
+                  SRV: []
+                  TXT:
+                    - MS=ms65022032
+                    - forward-email-site-verification=wS0G9jNYte
+                    - v=spf1 a include:spf.forwardemail.net -all
+                    - Probely=e85c9999-19d4-4716-9ee7-609f74a9ce3f
+                    - google-site-verification=XuaaPNYTdBARR5O3md_9vZhFJDR98v66oKNOWVfRIEY        
+        400:
+          description: "Missing domain information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Domain:
+                  value:
+                    code: 8
+                    message: "Missing Header Parameter(s)"
+                Invalid-Domain:
+                  value:
+                    code: 9
+                    message: "Invalid Header Parameter(s)"
+        401:
+          description: "Invalid/Missing API Token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Token:
+                  summary: "Missing API Token"
+                  value:
+                    code: 3
+                    message: "No API key provided"
+                Invalid-Token:
+                  summary: "Invalid API Token"
+                  value:
+                    code: 4
+                    message: "Invalid API key provided"
+        403:
+          description: "Missing Permissions"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorData"
+              examples:
+                Missing-Permissions:
+                  value:
+                    code: 1
+                    message: "You are not authorized to access this resource"
+                Blacklisted:
+                  value:
+                    code: 2
+                    message: "You are blacklisted from accessing this resource"
+      security:
+        - APIToken: []
+components:
+  securitySchemes:
+    APIToken:
+      type: "http"
+      scheme: "bearer"
+      description: |-
+        JSON Web Token Authentication with information containing your license key
+
+        Permissions:
+        - `Global::Data.Read` (0:0:0) - **Unused**
+        - `Global::Data.Write` (0:0:1) - **Unused**
+        - `Global::Data.Create` (0:0:2) - **Unused**
+        - `Global::Data.Delete` (0:0:3) - **Unused**
+        - `Global::Token.Read` (0:1:0) - Allows reading of token information
+        - `Global::Token.ReadAll` (0:1:1) - Allows reading of all token information
+        - `Global::Token.Write` (0:1:2) - **Unused**
+        - `Global::Token.Create` (0:1:3) - Allows creating of token information
+        - `Global::Token.Delete` (0:1:4) - Allows deleting of token 
+        - `Global::User.Read` (0:2:0) - Read user information
+        - `Global::User.ReadAll` (0:2:1) - **Unused**
+        - `Global::User.Write` (0:2:2) - Write/Update user information
+        - `Global::User.Create` (0:2:3) - Create a user profile
+        - `Global::User.Delete` (0:2:4) - Delete a user profile
+        - `Cryptography::Encrypt` (1:0) - Ability to encrypt data using the `/crypto/enc` endpoint
+        - `Cryptography::Decrypt` (1:1) - Ability to decrypt data using the `/crypto/dec` endpoint
+        - `Dictionary::Definition` (2:0) - !! DEPRECIATED!! Ability to get the definition of a word using the `/dict/def` endpoint
+        - `Dictionary::Synonym` (2:1) - !! DEPRECIATED!! Ability to get the synonyms of a word using the `/dict/syn` endpoint
+        - `Dictionary::Antonym` (2:2) - !! DEPRECIATED!! Ability to get the antonyms of a word using the `/dict/ant` endpoint
+        - `Facts::Dog` (3:0) - Ability to get a random dog fact using the `/facts/dog` endpoint
+        - `Facts::Cat` (3:1) - Ability to get a random cat fact using the `/facts/cat` endpoint
+        - `Facts::ChuckNorris` (3:2) - Ability to get a random fact using the `/facts/chucknorris` endpoint
+        - `Location::Coord` (4:0) - Ability to get the location of coordinates using the `/location/coords` endpoint
+        - `Location::Pluscode` (4:1) - Ability to get the location of a pluscode using the `/location/pluscode` endpoint
+        - `Location::Address` (4:2) - Ability to get the location of an address using the `/location/address` endpoint
+        - `Phone::Lookup` (5:0) - Ability to get the details of a phone number using the `/phone/details` endpoint
+        - `Phone::Validate` (5:1) - **Unused**
+        - `Quote::Kanye` (6:0) - Ability to get a random Kanye West quote using the `/quotes/kanye` endpoint
+        - `Quote::RonSwanson` (6:1) - Ability to get a random Ron Swanson quote using the `/quotes/ronswanson` endpoint
+        - `Quote::Random` (6:2) - Ability to get a random quote using the `/quotes/random` endpoint
+        - `Weather::Current` (7:0) - Ability to get the current weather using the `/weather/current` endpoint
+        - `Minecraft::Hive.Player` (8:0:0) - Ability to get information about a player on the Hive Minecraft server using the `/minecraft/hive/player` endpoint
+        - `Minecraft::Hive.Map` (8:0:1) - Ability to get information about a map on the Hive Minecraft server using the `/minecraft/hive/map` endpoint
+        - `Whois::DNS` (9:0) - Ability to get the DNS Whois information for a domain using the `/whois/dns` endpoint
+        - `Whois::Whois` (9:1) - Ability to get the Whois information for a domain using the `/whois/whois` endpoint
+        - `Whois::Full` (9:2) - Ability to get the full Whois information for a domain using the `/whois/full` endpoint
+        - `Barcode::Generate` (10:0) - Ability to generate a barcode using the `/barcode/gen` endpoint
+        - `Password::Generate` (11:0) - Ability to generate a password using the `/password/gen` endpoint
+
+        Permission Roles:
+        - `Global::Role.Developer` (0:3:0) - Full access to all endpoints
+        - `Global::Role.Administrator` (0:3:1) - Full access to all endpoints
+        - `Global::Role.Owner` (0:3:2) - Complete access to all endpoints
+  schemas:
+    ErrorData:
+      title: Error Response
+      description: |-
+        The error data that is returned when an error occurs
+
+        All Error Codes are located in `/functions/errorResponse.js` [GitHub](https://github.com/femdevs/femdev-website/blob/main/functions/errorResponse.js)
+      required:
+        - code
+        - message
+      properties:
+        code:
+          nullable: false
+          type: integer
+          description: "The error code"
+          minimum: 0
+          maximum: 30
+        message:
+          nullable: false
+          type: string
+          description: "The error message"
+    MinecraftHiveURLDataObj:
+      title: Hive URL Object
+      description: |-
+        The URL Data Object for the Hive Minecraft Server
+      required:
+        - url
+        - name
+      properties:
+        url:
+          nullable: false
+          type: string
+          description: "The URL of the player's skin"
+        name:
+          nullable: false
+          type: string
+          description: "The name of the player"
+    MinecraftHiveMainPlayerData:
+      title: Hive Player Lobby Stats
+      description: |-
+        The Main Player Data for the Hive Minecraft Server
+      required:
+        - xuid
+        - username
+        - username_cc
+        - rank
+        - first_played
+        - daily_login_streak
+        - longest_daily_login_streak
+        - hub_title_count
+        - hub_title_unlocked
+        - avatar_count
+        - avatar_unlocked
+        - costume_count
+        - friend_count
+        - equipped_hub_title
+        - equipped_avatar
+        - quest_count
+        - pets
+        - mounts
+        - hats
+      properties:
+        xuid:
+          nullable: false
+          type: integer
+          description: "The XUID of the player"
+        username:
+          nullable: false
+          type: string
+          description: "The username of the player"
+        username_cc:
+          nullable: false
+          type: string
+          description: "The username of the player with color codes"
+        rank:
+          nullable: false
+          type: string
+          description: "The rank of the player"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        daily_login_streak:
+          nullable: false
+          type: integer
+          description: "The current daily login streak of the player"
+        longest_daily_login_streak:
+          nullable: false
+          type: integer
+          description: "The longest daily login streak of the player"
+        hub_title_count:
+          nullable: false
+          type: integer
+          description: "The number of hub titles the player has"
+        hub_title_unlocked:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The number of hub titles the player has unlocked"
+        avatar_count:
+          nullable: false
+          type: integer
+          description: "The number of avatars the player has"
+        avatar_unlocked:
+          nullable: false
+          type: array
+          items:
+            type: object
+            $ref: "#/components/schemas/MinecraftHiveURLDataObj"
+          description: "The avatars the player has unlocked"
+        costume_count:
+          nullable: false
+          type: integer
+          description: "The number of costumes the player has"
+        friend_count:
+          nullable: false
+          type: integer
+          description: "The number of friends the player has"
+        equipped_hub_title:
+          nullable: false
+          type: string
+          description: "The hub title the player has equipped"
+        equipped_avatar:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHiveURLDataObj"
+          description: "The avatar the player has equipped"
+        quest_count:
+          nullable: false
+          type: integer
+          description: "The number of quests the player has"
+        pets:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The pets the player has"
+        mounts:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The mounts the player has"
+        hats:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The hats the player has"
+    MinecraftHivePlayerHideGameStatistics:
+      title: Hive Player Hide Stats
+      description: |-
+        The Hide Game Statistics for the Hive Minecraft Server
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - deaths
+        - hider_kills
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The XP of the player"
+        played:
+          nullable: false
+          type: integer
+          description: "The number of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The number of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+        hider_kills:
+          nullable: false
+          type: integer
+          description: "The number of hiders the player has killed"
+    MinecraftHivePlayerDeathrunStatistics:
+      title: Hive Player Death Run Stats
+      description: |-
+        The Death Run Statistics for the Hive Minecraft Server
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - deaths
+        - checkpoints
+        - activated
+        - kills
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The XP of the player"
+        played:
+          nullable: false
+          type: integer
+          description: "The number of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The number of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+        checkpoints:
+          nullable: false
+          type: integer
+          description: "The number of checkpoints the player has reached"
+        activated:
+          nullable: false
+          type: integer
+          description: "The number of traps the player has activated"
+        kills:
+          nullable: false
+          type: integer
+          description: "The number of deaths the player has caused"
+    MinecraftHivePlayerWarStatistics:
+      title: Hive Player War Stats
+      description: |-
+        The War Statistics for the Hive Minecraft Server
+      required:
+        - xp
+        - played
+        - first_played
+        - final_kills
+        - kills
+        - treasure_destroyed
+        - deaths
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The XP of the player"
+        played:
+          nullable: false
+          type: integer
+          description: "The number of games the player has played"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        final_kills:
+          nullable: false
+          type: integer
+          description: "The number of final kills the player has"
+        kills:
+          nullable: false
+          type: integer
+          description: "The number of kills the player has"
+        treasure_destroyed:
+          nullable: false
+          type: integer
+          description: "The number of treasures the player has destroyed"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+    MinecraftHivePlayerMurderMysteryStatistics:
+      title: Hive Player Murder Mystery Stats
+      description: |-
+        The Murder Mystery for the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - deaths
+        - coins
+        - murders
+        - murderer_eliminations
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The XP of the player"
+        played:
+          nullable: false
+          type: integer
+          description: "The number of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The number of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+        coins:
+          nullable: false
+          type: integer
+          description: "The number of coins the player has"
+        murders:
+          nullable: false
+          type: integer
+          description: "The number of murders the player has committed"
+        murderer_eliminations:
+          nullable: false
+          type: integer
+          description: "The number of murderers the user has eliminated"
+    MinecraftHivePlayerSurvivalGamesStatistics:
+      title: Hive Player Survival Stats
+      description: |-
+        The Survival Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - first_played
+        - crates
+        - kills
+        - deaths
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        crates:
+          nullable: false
+          type: integer
+          description: "The number of crates the player has opened"
+        kills:
+          nullable: false
+          type: integer
+          description: "The number of kills the player has"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+    MinecraftHivePlayerSkyWarsStatistics:
+      title: Hive Player Skywars Stats
+      description: |-
+        The Sky Wars Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - ores_mined
+        - deaths
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        ores_mined:
+          nullable: false
+          type: integer
+          description: "The number of ores the player has mined"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+    MinecraftHivePlayerCTFStatistics:
+      title: Hive Player Capture the Flag Stats
+      description: |-
+        The Capture The Flag Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - assists
+        - deaths
+        - flags_captured
+        - kills
+        - flags_returned
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        assists:
+          nullable: false
+          type: integer
+          description: "The number of assists the player has"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+        flags_captured:
+          nullable: false
+          type: integer
+          description: "The number of flags the player has captured"
+        kills:
+          nullable: false
+          type: integer
+          description: "The number of kills the player has"
+        flags_returned:
+          nullable: false
+          type: integer
+          description: "The number of flags the player has returned"
+    MinecraftHivePlayerDropStatistics:
+      title: Hive Player Drop Stats
+      description: |-
+        The Drop Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - first_played
+        - blocks_destroyed
+        - powerups_collected
+        - vaults_used
+        - deaths
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        blocks_destroyed:
+          nullable: false
+          type: integer
+          description: "The number of blocks the player has destroyed"
+        powerups_collected:
+          nullable: false
+          type: integer
+          description: "The number of powerups the player has collected"
+        vaults_used:
+          nullable: false
+          type: integer
+          description: "The number of vaults the player has used"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+    MinecraftHivePlayerGroundStatistics:
+      title: Hive Player Ground Stats
+      description: |-
+        The Ground Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - blocks_destroyed
+        - powerups_collected
+        - vaults_used
+        - deaths
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        blocks_destroyed:
+          nullable: false
+          type: integer
+          description: "The number of blocks the player has destroyed"
+        powerups_collected:
+          nullable: false
+          type: integer
+          description: "The number of powerups the player has collected"
+        vaults_used:
+          nullable: false
+          type: integer
+          description: "The number of vaults the player has used"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+    MinecraftHivePlayerBuildStatistics:
+      title: Hive Player Build Stats
+      description: |-
+        The Build Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - first_played
+        - rating_meh_received
+        - rating_ok_received
+        - rating_good_received
+        - rating_great_received
+        - rating_love_received
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        rating_meh_received:
+          nullable: false
+          type: integer
+          description: "The number of meh ratings the player has received"
+        rating_ok_received:
+          nullable: false
+          type: integer
+          description: "The number of ok ratings the player has received"
+        rating_good_received:
+          nullable: false
+          type: integer
+          description: "The number of good ratings the player has received"
+        rating_great_received:
+          nullable: false
+          type: integer
+          description: "The number of great ratings the player has received"
+        rating_love_received:
+          nullable: false
+          type: integer
+          description: "The number of love ratings the player has received"
+    MinecraftHivePlayerPartyStatistics:
+      title: Hive Player Block Party Stats
+      description: |-
+        The Party Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - powerups_collected
+        - rounds_survived
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        powerups_collected:
+          nullable: false
+          type: integer
+          description: "The number of powerups the player has collected"
+        rounds_survived:
+          nullable: false
+          type: integer
+          description: "The number of rounds the player has survived"
+    MinecraftHivePlayerBridgeStatistics:
+      title: Hive Player Bridge Stats
+      description: |-
+        The Bridge Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - first_played
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+    MinecraftHivePlayerGravityStatistics:
+      title: Hive Player Gravity Stats
+      description: |-
+        The Gravity Statistics of the Minecraft Hive Player
+      required:
+        - xp
+        - played
+        - victories
+        - first_played
+        - deaths
+        - maps_completed
+        - maps_completed_without_dying
+      properties:
+        xp:
+          nullable: false
+          type: integer
+          description: "The amount of XP the player has"
+        played:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has played"
+        victories:
+          nullable: false
+          type: integer
+          description: "The amount of games the player has won"
+        first_played:
+          nullable: false
+          type: integer
+          description: "The first time the player played"
+        deaths:
+          nullable: false
+          type: integer
+          description: "The number of times the player has died"
+        maps_completed:
+          nullable: false
+          type: integer
+          description: "The number of maps the player has completed"
+        maps_completed_without_dying:
+          nullable: false
+          type: integer
+          description: "The number of maps the player has completed without dying"
+    MinecraftHivePlayerCombinedData:
+      title: Complete Hive Player Stats
+      required:
+        - hide
+        - main
+        - deathrun
+        - war
+        - murder
+        - sg
+        - sky
+        - ctf
+        - drop
+        - ground
+        - build
+        - party
+        - bridge
+        - grav
+      properties:
+        hide:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerHideGameStatistics"
+          description: "The hide game statistics of the player"
+        main:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHiveMainPlayerData"
+          description: "The main statistics of the player"
+        deathrun:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerDeathrunStatistics"
+          description: "The deathrun statistics of the player"
+        war:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerWarStatistics"
+          description: "The war statistics of the player"
+        murder:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerMurderMysteryStatistics"
+          description: "The murder mystery game statistics of the player"
+        sg:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerSurvivalGamesStatistics"
+          description: "The survival games statistics of the player"
+        sky:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerSkyWarsStatistics"
+          description: "The sky wars statistics of the player"
+        ctf:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerCTFStatistics"
+          description: "The capture the flag statistics of the player"
+        drop:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerDropStatistics"
+          description: "The drop statistics of the player"
+        ground:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerGroundStatistics"
+          description: "The ground statistics of the player"
+        build:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerBuildStatistics"
+          description: "The build statistics of the player"
+        party:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerPartyStatistics"
+          description: "The party statistics of the player"
+        bridge:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerBridgeStatistics"
+          description: "The bridge statistics of the player"
+        grav:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/MinecraftHivePlayerGravityStatistics"
+          description: "The gravity statistics of the player"
+    MinecraftHiveMapData:
+      title: Hive Map Info
+      description: |-
+        The Map Data for the Hive Minecraft Server
+      required:
+        - name
+        - season
+        - variant
+        - image
+      properties:
+        name:
+          nullable: false
+          type: string
+          description: "The name of the map"
+        season:
+          nullable: false
+          type: string
+          description: "The season of the map"
+        variant:
+          nullable: false
+          type: string
+          description: "The variant of the map"
+        image:
+          nullable: false
+          type: string
+          description: "The image of the map"
+    LocationAddressData:
+      title: GPS Location Data
+      description: |-
+        The address of the location
+      required:
+        - full
+        - houseNumber
+        - street
+        - city
+        - region
+        - country
+        - postalCode
+      properties:
+        full:
+          nullable: false
+          type: string
+          description: "The full address"
+        houseNumber:
+          nullable: false
+          type: string
+          description: "The house number"
+        street:
+          nullable: false
+          type: string
+          description: "The street"
+        city:
+          nullable: false
+          type: string
+          description: "The city"
+        region:
+          nullable: false
+          type: string
+          description: "The region"
+        country:
+          nullable: false
+          type: string
+          description: "The country"
+        postalCode:
+          nullable: false
+          type: string
+          description: "The postal code"
+    LocationCoordData:
+      title: Cartesian Global Coordinates
+      description: |-
+        The coordinates of the location
+      required:
+        - lat
+        - lng
+      properties:
+        lat:
+          nullable: false
+          type: number
+          description: "The latitude of the location"
+        lng:
+          nullable: false
+          type: number
+          description: "The longitude of the location"
+    LocationData:
+      title: Location Response
+      description: |-
+        The response data for all location endpoints
+      required:
+        - address
+        - coords
+        - pluscode
+      properties:
+        address:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/LocationAddressData"
+          description: "The address of the location"
+        coords:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/LocationCoordData"
+          description: "The coordinates of the location"
+        pluscode:
+          nullable: false
+          type: string
+          description: "The plus code of the location"
+    PhoneNumberData:
+      title: Phone Number Response
+      description: |-
+        The information that is returned when getting phone number information
+      required:
+        - status
+        - phone
+        - phone_valid
+        - phone_type
+        - phone_region
+        - country
+        - country_code
+        - country_prefix
+        - international_number
+        - local_number
+        - e164
+        - carrier
+      properties:
+        status:
+          nullable: false
+          type: string
+          description: "The status of the phone number"
+        phone:
+          nullable: false
+          type: string
+          description: "The phone number"
+        phone_valid:
+          nullable: false
+          type: boolean
+          description: "Whether or not the phone number is valid"
+        phone_type:
+          nullable: false
+          type: string
+          description: "The type of the phone number"
+        phone_region:
+          nullable: false
+          type: string
+          description: "The region of the phone number"
+        country:
+          nullable: false
+          type: string
+          description: "The country of the phone number"
+        country_code:
+          nullable: false
+          type: string
+          description: "The country code of the phone number"
+        country_prefix:
+          nullable: false
+          type: string
+          description: "The country prefix of the phone number"
+        international_number:
+          nullable: false
+          type: string
+          description: "The international number of the phone number"
+        local_number:
+          nullable: false
+          type: string
+          description: "The local number of the phone number"
+        e164:
+          nullable: false
+          type: string
+          description: "The E164 number of the phone number"
+        carrier:
+          nullable: false
+          type: string
+          description: "The carrier of the phone number"
+    QuoteData:
+      title: Quote Response
+      description: |-
+        The information that is returned when getting a quote
+      required:
+        - quote
+        - author
+        - tags
+      properties:
+        quote:
+          nullable: false
+          type: string
+          description: "The quote"
+        author:
+          nullable: false
+          type: string
+          description: "The author of the quote"
+        tags:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The tags of the quote"
+    EmailReqText:
+      title: Email Text
+      description: |-
+        The text contents of the email
+      type: string
+    EmailReqHTML:
+      title: Email HTML
+      description: |-
+        The HTML contents of the email
+      type: string
+    EmailReqURL:
+      title: Email URL
+      description: |-
+        The URL for the HTML contents of the email
+      type: string
+    EmailRequest:
+      title: Email Request
+      description: |-
+        The information that is required to send an email
+      required:
+        - to
+        - subject
+      properties:
+        to:
+          nullable: false
+          type: string
+          description: "The email address to send the email to"
+        subject:
+          nullable: false
+          type: string
+          description: "The subject of the email"
+      additionalProperties: 
+        oneOf:
+          - type: string
+            $ref: "#/components/schemas/EmailReqText"
+          - type: string
+            $ref: "#/components/schemas/EmailReqHTML"
+          - type: string
+            $ref: "#/components/schemas/EmailReqURL"
+    WhoisDNSCAAIODEFRecord:
+      title: 'CAA IODEF Endpoint Record'
+      description: |-
+        The Incident Object Description Exchange Format (IODEF) Endpoint record
+
+        Internet Schema Document: https://www.ietf.org/rfc/rfc5070.txt
+      required:
+        - iodef
+      type: object
+      properties:
+        iodef:
+          nullable: false
+          type: string
+          description: The endpoint to send IODEF reports to
+    WhoisDNSCAAIssuerRecord:
+      title: 'CAA Issuer Record'
+      description: |-
+        The Information on an issuer for Certificates
+      type: object
+      required:
+        - issuer
+        - wild
+        - main
+      properties:
+        issuer:
+          nullable: false
+          type: string
+          description: "The Certificate Authority of the STRICT domain (Non-wildcards)"
+        wild:
+          nullable: false
+          type: boolean
+          description: "Whether or not the CA is authorized to issue certificates for wildcard domains"
+        main:
+          nullable: false
+          type: boolean
+          description: "Whether or not the CA is authorized to issue certificates for specific domains"
+    WhoisDNSCAARecord:
+      title: DNS CAA Record
+      description: |-
+        The CAA record of the Whois DNS
+      oneOf:
+        - type: object
+          $ref: "#/components/schemas/WhoisDNSCAAIODEFRecord"
+        - type: object
+          $ref: "#/components/schemas/WhoisDNSCAAIssuerRecord"
+    WhoisDNSMXRecord:
+      title: DNS MX Record
+      description: |-
+        The MX record of the Whois DNS
+      required:
+        - priority
+        - exchange
+      type: object
+      properties:
+        priority:
+          nullable: false
+          type: number
+          description: "The priority of the MX record"
+        exchange:
+          nullable: false
+          type: string
+          description: "The exchange of the MX record"
+    WhoisDNSSOARecord:
+      title: DNS SOA Record
+      description: |-
+        The SOA record of the Whois DNS
+      required:
+        - nsname
+        - hostmaster
+        - serial
+        - refresh
+        - retry
+        - expire
+        - minttl
+      type: object
+      properties:
+        nsname:
+          nullable: false
+          type: string
+          description: "The Primary Name Server of the SOA record"
+        hostmaster:
+          nullable: false
+          type: string
+          description: "The hostmaster of the SOA record"
+        serial:
+          nullable: false
+          type: number
+          description: "The serial of the SOA record"
+        refresh:
+          nullable: false
+          type: number
+          description: "The refresh time of the SOA record"
+        retry:
+          nullable: false
+          type: number
+          description: "The retry time of the SOA record"
+        expire:
+          nullable: false
+          type: number
+          description: "The expire time of the SOA record"
+        minttl:
+          nullable: false
+          type: number
+          description: "The minimum TTL (Time-To-Live) of the SOA record"
+    WhoisDNSData:
+      title: WHOIS DNS Response
+      description: |-
+        The DNS Data returned by the Whois DNS endpoint
+      required:
+        - A
+        - AAAA
+        - CAA
+        - CNAME
+        - MX
+        - NS
+        - PTR
+        - SOA
+        - SRV
+        - TXT
+      type: object
+      properties:
+        A:
+          nullable: false
+          type: string
+          description: "The A record"
+        AAAA:
+          nullable: false
+          type: string
+          description: "The AAAA record"
+        CAA:
+          nullable: false
+          type: array
+          items:
+            $ref: "#/components/schemas/WhoisDNSCAARecord"
+          description: "The CAA records"
+        CNAME:
+          nullable: false
+          type: string
+          description: "The CNAME record"
+        MX:
+          nullable: false
+          type: array
+          items:
+            $ref: "#/components/schemas/WhoisDNSMXRecord"
+          description: "The MX records"
+        NS:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The NS records"
+        PTR:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The PTR records"
+        SOA:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/WhoisDNSSOARecord"
+          description: "The SOA record"
+        SRV:
+          nullable: false
+          type: array
+          items:
+            type: string
+          description: "The SRV record"
+    WhoisUserData:
+      title: WHOIS Representative Information
+      description: |-
+        The Information on a representative from the Whois Response
+      type: object
+      required:
+        - name
+        - organization
+        - street
+        - city
+        - state
+        - postalCode
+        - country
+        - phone
+        - fax
+        - email
+      properties:
+        name:
+          nullable: false
+          type: string
+          description: "The name of the representative"
+        organization:
+          nullable: false
+          type: string
+          description: "The organization of the representative"
+        street:
+          nullable: false
+          type: string
+          description: "The street of the representative"
+        city:
+          nullable: false
+          type: string
+          description: "The city of the representative"
+        state:
+          nullable: false
+          type: string
+          description: "The state of the representative"
+        postalCode:
+          nullable: false
+          type: string
+          description: "The postal code of the representative"
+        country:
+          nullable: false
+          type: string
+          description: "The country of the representative"
+        phone:
+          nullable: false
+          type: string
+          description: "The phone number of the representative"
+        fax:
+          nullable: false
+          type: string
+          description: "The fax number of the representative"
+        email:
+          nullable: false
+          type: string
+          description: "The email of the representative"
+    WhoisDomainStatus:
+      title: WHOIS Domain Status
+      description: |-
+        The status of the domain
+      type: string
+      enum:
+        - "Client Hold"
+        - "Server Hold"
+        - "Client Renew Prohibited"
+        - "Server Renew Prohibited"
+        - "Client Update Prohibited"
+        - "Server Update Prohibited"
+        - "Client Delete Prohibited"
+        - "Server Delete Prohibited"
+        - "Client Transfer Prohibited"
+        - "Server Transfer Prohibited"
+    WhoisData:
+      title: WHOIS Whois Response
+      description: |-
+        The Whois Data returned by the Whois Whois endpoint
+      type: object
+      required:
+        - domainName
+        - registrar
+        - creationDate
+        - expirationDate
+        - updatedDate
+        - registrant
+        - admin
+        - tech
+        - billing
+        - status
+      properties:
+        domainName:
+          nullable: false
+          type: string
+          description: "The domain name"
+        registrar:
+          nullable: false
+          type: string
+          description: "The registrar of the domain"
+        creationDate:
+          nullable: false
+          type: string
+          description: "The creation date of the domain"
+        expirationDate:
+          nullable: false
+          type: string
+          description: "The expiration date of the domain"
+        updatedDate:
+          nullable: false
+          type: string
+          description: "The updated date of the domain"
+        registrant:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/WhoisUserData"
+          description: "The registrant of the domain"
+        admin:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/WhoisUserData"
+          description: "The admin of the domain"
+        tech:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/WhoisUserData"
+          description: "The tech of the domain"
+        billing:
+          nullable: false
+          type: object
+          $ref: "#/components/schemas/WhoisUserData"
+          description: "The billing of the domain"
+        status:
+          nullable: false
+          type: array
+          items:
+            type: string
+            $ref: "#/components/schemas/WhoisDomainStatus"
+          description: "The status of the domain"
+    WhoisFullData:
+      title: WHOIS Full Response
+      description: |-
+        The full Whois Data returned by the Whois Full endpoint
+      type: object
+      required:
+        - dns
+        - whois
+      properties:
+        dns:
+          type: object
+          $ref: "#/components/schemas/WhoisDNSData"
+        whois:
+          type: object
+          $ref: "#/components/schemas/WhoisData"
+    BarcodeType:
+      title: Barcode Type
+      description: |-
+        The type of barcode to be generated
+      type: string
+      enum:
+        - auspost
+        - azteccode
+        - azteccodecompact
+        - aztecrune
+        - bc412
+        - channelcode
+        - codablockf
+        - code11
+        - code128
+        - code16k
+        - code2of5
+        - code32
+        - code39
+        - code39ext
+        - code49
+        - code93
+        - code93ext
+        - codeone
+        - coop2of5
+        - daft
+        - databarexpanded
+        - databarexpandedcomposite
+        - databarexpandedstacked
+        - databarexpandedstackedcomposite
+        - databarlimited
+        - databarlimitedcomposite
+        - databaromni
+        - databaromnicomposite
+        - databarstacked
+        - databarstackedcomposite
+        - databarstackedomni
+        - databarstackedomnicomposite
+        - databartruncated
+        - databartruncatedcomposite
+        - datalogic2of5
+        - datamatrix
+        - datamatrixrectangular
+        - datamatrixrectangularextension
+        - dotcode
+        - ean13
+        - ean13composite
+        - ean14
+        - ean2
+        - ean5
+        - ean8
+        - ean8composite
+        - flattermarken
+        - gs1-128
+        - gs1-128composite
+        - gs1-cc
+        - gs1datamatrix
+        - gs1datamatrixrectangular
+        - gs1dldatamatrix
+        - gs1dlqrcode
+        - gs1dotcode
+        - gs1northamericancoupon
+        - gs1qrcode
+        - hanxin
+        - hibcazteccode
+        - hibccodablockf
+        - hibccode128
+        - hibccode39
+        - hibcdatamatrix
+        - hibcdatamatrixrectangular
+        - hibcmicropdf417
+        - hibcpdf417
+        - hibcqrcode
+        - iata2of5
+        - identcode
+        - industrial2of5
+        - interleaved2of5
+        - isbn
+        - ismn
+        - issn
+        - itf14
+        - japanpost
+        - kix
+        - leitcode
+        - mailmark
+        - mands
+        - matrix2of5
+        - maxicode
+        - micropdf417
+        - microqrcode
+        - msi
+        - onecode
+        - pdf417
+        - pdf417compact
+        - pharmacode
+        - pharmacode2
+        - planet
+        - plessey
+        - posicode
+        - postnet
+        - pzn
+        - qrcode
+        - rationalizedCodabar
+        - raw
+        - rectangularmicroqrcode
+        - royalmail
+        - sscc18
+        - swissqrcode
+        - symbol
+        - telepen
+        - telepennumeric
+        - ultracode
+        - upca
+        - upcacomposite
+        - upce
+        - upcecomposite

@@ -1,5 +1,4 @@
 export default function StatusOrb({ state, translations }) {
-
     const States = [
         ["bg-green-500", translations.type.up],
         ["bg-red-500", translations.type.down],

@@ -2,9 +2,9 @@ import React from "react";
 import UptimeClient from "#/src/uptime";
 import otaClient from "@crowdin/ota-client";
 
-import FooterLink from "./FooterLink";
-import FooterHeader from "./FooterHeader";
-import StatusOrb from "./StatusOrb";
+import FooterLink from "#/components/FooterLink";
+import FooterHeader from "#/components/FooterHeader";
+import StatusOrb from "#/components/StatusOrb";
 
 export default async function Footer({ lang }) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);

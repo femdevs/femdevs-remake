@@ -40,11 +40,12 @@ class UserPermissions {
 			encrypt: new PermissionSet("Cryptography::Encrypt", 0, 1),
 			decrypt: new PermissionSet("Cryptography::Decrypt", 1, 1),
 		},
-		dictionary: { // 2:x
-			definition: new PermissionSet("Dictionary::Definition", 0, 2),
-			synonym: new PermissionSet("Dictionary::Synonym", 1, 2),
-			antonym: new PermissionSet("Dictionary::Antonym", 2, 2),
-		},
+		//! Removed from API due to it not functioning through server hosting
+		// dictionary: { // 2:x
+		// 	definition: new PermissionSet("Dictionary::Definition", 0, 2),
+		// 	synonym: new PermissionSet("Dictionary::Synonym", 1, 2),
+		// 	antonym: new PermissionSet("Dictionary::Antonym", 2, 2),
+		// },
 		facts: { // 3:x
 			chuckNorris: new PermissionSet("Facts::ChuckNorris", 0, 3),
 			cat: new PermissionSet("Facts::Cat", 1, 3),
@@ -64,9 +65,10 @@ class UserPermissions {
 			ronSwanson: new PermissionSet("Quote::RonSwanson", 1, 6),
 			random: new PermissionSet("Quote::Random", 2, 6),
 		},
-		weather: { // 7:x
-			current: new PermissionSet("Weather::Current", 0, 7),
-		},
+		//! Removed due to API being inaccurate
+		// weather: { // 7:x
+		// 	current: new PermissionSet("Weather::Current", 0, 7),
+		// },
 		minecraft: { // 8:x:x
 			hive: { // 8:0:x
 				player: new PermissionSet("Minecraft::Hive.Player", 0, 8, 0),

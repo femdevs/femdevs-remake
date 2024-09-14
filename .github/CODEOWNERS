@@ -1,0 +1,12 @@
+* @femdevs/code-review @femdevs/dev
+/app/oss/ @femdevs/admin @femdevs/code-review @femdevs/dev
+/app/auth/ @femdevs/admin @femdevs/code-review @femdevs/dev
+/app/mail/ @femdevs/admin @femdevs/code-review @femdevs/dev
+/app/admin/ @femdevs/admin @femdevs/code-review @femdevs/dev
+**/meta/ @femdevs/admin @femdevs/code-review @femdevs/dev
+CODEOWNERS @femdevs/admin @femdevs/code-review @femdevs/dev
+CONTRIBUTING.md @femdevs/admin @femdevs/code-review @femdevs/dev
+LICENSE @femdevs/admin @femdevs/code-review @femdevs/dev
+README.md @femdevs/admin @femdevs/code-review @femdevs/dev
+SECURITY.md @femdevs/admin @femdevs/code-review @femdevs/dev
+.github/ @femdevs/admin @femdevs/code-review @femdevs/dev

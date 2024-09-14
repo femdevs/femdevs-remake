@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 
 class ErrorData {
+    /**
+     * @param {number} httpCode
+     * @param {number} code
+     * @param {string} message
+     */
     constructor(httpCode, code, message) {
         this.httpCode = httpCode;
         this.code = code;
@@ -37,7 +42,7 @@ const errResponse = new Map()
 
 function sendError(code) {
     const err = errResponse.get(code);
-    return NextResponse.json(err, { status: err.httpCode });
+    return new NextResponse(err, { status: err.httpCode });
 }
 
 export { ErrorData, errResponse, sendError };

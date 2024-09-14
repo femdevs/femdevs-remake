@@ -1,4 +1,4 @@
-import SocialIcon from "./ProfileSocialIcon";
+import SocialIcon from "#/components/ProfileSocialIcon";
 
 export default function Social({ ver, icon, link, title}) {
     return (

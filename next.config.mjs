@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    async redirects() {
+    redirects: async function() {
         return [
             // Basic redirect
             {
@@ -24,6 +24,11 @@ const nextConfig = {
                 permanent: true,
             },
         ];
+    },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
     },
 };
 
