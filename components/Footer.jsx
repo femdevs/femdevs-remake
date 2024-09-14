@@ -2,9 +2,25 @@ import React from "react";
 import UptimeClient from "#/src/uptime";
 import otaClient from "@crowdin/ota-client";
 
-import FooterLink from "#/components/FooterLink";
-import FooterHeader from "#/components/FooterHeader";
 import StatusOrb from "#/components/StatusOrb";
+
+export function FooterHeader({ title }) {
+    return (
+        <h2 className="select-none font-poppins text-xl font-medium">
+            {title}
+        </h2>
+    );
+}
+
+export function FooterLink({ href, text, extraAttributes }) {
+    return (
+        <a
+            className="select-none font-poppins text-lg text-neutral-100 transition-all hover:text-neutral-300"
+            href={href}
+            {...extraAttributes}
+        >{text}</a>
+    );
+}
 
 export default async function Footer({ lang }) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
