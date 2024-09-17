@@ -1,21 +1,27 @@
 'use server';
 import otaClient from '@crowdin/ota-client';
+import { notFound } from 'next/navigation';
 
 import ServicesAbout from '#/components/ServicesAbout';
 import LFV from '#/components/LFV';
 import UptimeClient from '#/src/uptime';
 
+const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
+
 export async function generateMetadata({ params }) {
+    const { lang } = params;
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
     return {
         title: 'Homepage',
         description: 'The homepage of The FemDevs',
         alternates: {
-            canonical: '/' + params.lang,
+            canonical: `/${params.lang}`,
         },
         openGraph: {
             title: 'The FemDevs Homepage',
             description: 'The homepage of The FemDevs',
-            url: '/' + params.lang,
+            url: `/${params.lang}`,
         },
         twitter: {
             title: 'The FemDevs Homepage',
@@ -36,10 +42,11 @@ function SVG({ path }) {
     );
 }
 
-
 export default async function Page({ params }) {
-    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
-    const strings = await client.getStringsByLocale(params.lang);
+    const { lang } = params;
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return notFound();
+    const strings = await client.getStringsByLocale(lang);
     const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN);
     const uptimeData = await uptimeClient.status();
     return (

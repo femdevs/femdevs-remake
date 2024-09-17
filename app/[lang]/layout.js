@@ -1,39 +1,14 @@
+import otaClient from '@crowdin/ota-client';
+import { notFound } from 'next/navigation';
+
 import Nav from '#/components/Nav';
 import Footer from '#/components/Footer';
 
-/** @type {import('next').Metadata} */
-export const metadata = {
-    metadataBase: new URL('https://thefemdevs.com'),
-    title: {
-        template: "%s | The FemDevs",
-        default: 'Home page',
-    },
-    keywords: [],
-    authors: [
-        { name: 'Benjamin', url: '' },
-        { name: 'Alex', url: '' },
-        { name: 'Oblong', url: '' },
-    ],
-    creator: 'The FemDevs',
-    openGraph: {
-        type: 'website',
-        locale: 'en_US',
-        siteName: 'The FemDevs',
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'The FemDevs',
-        site: '@OfficialFemDevs',
-        creator: '@OfficialFemDevs',
-    },
-    robots: {
-        index: true,
-        follow: true,
-    },
-};
-
-export default function RootLayout({ children, params }) {
+export default async function RootLayout({ children, params }) {
     const { lang } = params;
+    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return notFound();
     return (
         <html lang="en">
             <body className="bg-neutral-200">

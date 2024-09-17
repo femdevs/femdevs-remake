@@ -20,7 +20,7 @@ const nextConfig = {
             },
             {
                 source: '/contact',
-                destination: '/en-US/contact',
+                destination: 'mailto:support@thefemdevs.com',
                 permanent: true,
             },
         ];

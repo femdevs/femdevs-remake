@@ -10,22 +10,30 @@ class UptimeClient {
         this.token = token;
     }
     async status() {
-        const response = await fetch('https://betteruptime.com/api/v2/status-pages/195665/resources', {
+        const init = {
             headers: {
-                'Authorization': `Bearer ${this.token}`,
+                Authorization: `Bearer ${this.token}`,
             },
-        });
-        const { data } = await response.json();
-        const formattedData = [];
-        for (const resource of data) {
-            const resourceData = new ResourceData(resource.attributes);
-            formattedData.push(resourceData);
+        };
+        const response = await fetch(`https://betteruptime.com/api/v2/status-pages/195665/resources`, init)
+            .then(res => res.json());
+        const resourceIDs = response.data.map(obj => obj.id);
+        const resources = [];
+        for (const id of resourceIDs) {
+            const { data: {attributes: attr } } = await fetch(`https://uptime.betterstack.com/api/v2/status-pages/195665/resources/${id}`, init)
+                .then(res => res.json());
+            resources.push(new ResourceData(attr));
         }
-        const keyMap = { 'operational': 1, 'downtime': 2, 'degraded': 3, 'maintenance': 4 };
+        const keyMap = { 'up': 1, 'down': 2, 'degraded': 3, 'maintenance': 4 };
         return {
-            agrStatus: formattedData.reduce((prev, { status }) => (prev !== 1 && keyMap[status] > prev) ? prev : keyMap[status], 1),
-            uptime: formattedData.reduce((prev, { uptime }) => prev + uptime, 0) / formattedData.length,
-            resources: formattedData,
+            agrStatus: resources.reduce((prev, dat) => {
+                if (prev === 2 || keyMap[dat.status] === 2) return 2;
+                if (prev === 3 || keyMap[dat.status] === 3) return 3;
+                if (prev === 4 || keyMap[dat.status] === 4) return 4;
+                return 1;
+            }, 1),
+            uptime: resources.reduce((prev, { uptime }) => prev + uptime, 0) / resources.length,
+            resources: resources,
         };
     }
 }

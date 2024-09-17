@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { notFound } from 'next/navigation';
 import * as Supabase from '@supabase/supabase-js';
 import User from '#/src/userMgr';
 import { sendError } from '#/src/error';
@@ -83,9 +84,7 @@ const supabase = Supabase.createClient(
     process.env.SUPABASE_KEY
 );
 
-export const config = {
-    matcher: '/api/:path*',
-};
+export const config = {};
 
 /** @type {import('next/server').NextMiddleware} */
 export async function middleware(request) {

@@ -5,6 +5,7 @@ import * as Supabase from '@supabase/supabase-js';
 import crypto from 'crypto';
 
 export async function generateMetadata({ params }) {
+    /** @type {import('next').Metadata} */
     return {
         title: 'Team',
         description: 'About The FemDevs Team',
@@ -15,6 +16,7 @@ export async function generateMetadata({ params }) {
             title: 'About The FemDevs Team',
             description: 'About The FemDevs Team',
             url: `/${params.lang}/team`,
+            siteName: 'About The FemDevs Team',
         },
         twitter: {
             title: 'About The FemDevs Team',
@@ -53,8 +55,11 @@ function hash(val) {
 }
 
 export default async function Page({ params }) {
+    const { lang } = params;
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
-    const strings = await client.getStringsByLocale(params.lang);
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return notFound();
+    const strings = await client.getStringsByLocale(lang);
     const supabase = Supabase.createClient(
         process.env.SUPABASE_URL,
         process.env.SUPABASE_KEY

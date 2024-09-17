@@ -4,6 +4,37 @@ import Header from "#/components/ProfileHeader";
 import Social from "#/components/ProfileSocial";
 import Bold from "#/components/Bold";
 
+/** @return {import('next').Metadata} */
+export async function generateMetadata() {
+    return {
+        title: 'Ben\'s Profile',
+        description: 'About Benjamin, a crucial manager within the FemDevs',
+        alternates: {
+            canonical: `/profile/ben`,
+        },
+        openGraph: {
+            title: 'Ben\'s Profile',
+            description: 'About Benjamin, a crucial manager within the FemDevs',
+            url: `/profile/ben`,
+            siteName: 'Ben\'s Profile',
+            images: [
+                {
+                    href: '/assets/images/grav/329f481757ca49ce98d31d9041285a11',
+                },
+            ],
+        },
+        twitter: {
+            title: 'Ben\'s Profile',
+            description: 'About Benjamin, a crucial manager within the FemDevs',
+            images: [
+                {
+                    href: '/assets/images/grav/329f481757ca49ce98d31d9041285a11',
+                },
+            ],
+        },
+    };
+}
+
 export default function Page() {
     return (
         <body className="bg-gray-100 font-sans leading-normal tracking-normal">

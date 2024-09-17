@@ -4,6 +4,37 @@ import Header from "#/components/ProfileHeader";
 import Social from "#/components/ProfileSocial";
 import Bold from "#/components/Bold";
 
+/** @return {import('next').Metadata} */
+export async function generateMetadata() {
+    return {
+        title: 'Alex\'s Profile',
+        description: 'About Alex, a crucial manager within the FemDevs',
+        alternates: {
+            canonical: `/profile/alex`,
+        },
+        openGraph: {
+            title: 'Alex\'s Profile',
+            description: 'About Alex, a crucial manager within the FemDevs',
+            url: `/profile/alex`,
+            siteName: 'Alex\'s Profile',
+            images: [
+                {
+                    href: '/assets/images/grav/ad7cc897aef0988a7f7039f16417008b',
+                },
+            ],
+        },
+        twitter: {
+            title: 'Alex\'s Profile',
+            description: 'About Alex, a crucial manager within the FemDevs',
+            images: [
+                {
+                    href: '/assets/images/grav/ad7cc897aef0988a7f7039f16417008b',
+                },
+            ],
+        },
+    };
+}
+
 export default function Page() {
     return (
         <body className="bg-gray-100 font-sans leading-normal tracking-normal">
@@ -15,13 +46,13 @@ export default function Page() {
                         <Description>
                             Hai, I&apos;m Alex! (She/They), an exceptionally silly 17 year old :3
                         </Description>
-                        <Header title="FemDevs"/>
+                        <Header title="FemDevs" />
                         <Description>
                             As a co-owner of <Bold value={(<a href="https://thefemdevs.com/">The FemDevs</a>)} />,
                             I&apos;m committed to helping everyone thrive in the coding world, regardless of gender.
                             We also strive to make new and unique projects for people worldwide.
                         </Description>
-                        <Header title="Language Proficiency"/>
+                        <Header title="Language Proficiency" />
                         <Description>
                             I&apos;m fluent in both English and Arabic, and I&apos;m all for learning new languages.
                             I&apos;ve found a passion for translation

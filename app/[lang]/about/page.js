@@ -1,6 +1,7 @@
 'use server';
 /* eslint-disable @next/next/no-img-element */
 import otaClient from '@crowdin/ota-client';
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }) {
     return {
@@ -13,6 +14,7 @@ export async function generateMetadata({ params }) {
             title: 'About The FemDevs',
             description: 'About The FemDevs',
             url: `/${params.lang}/about`,
+            siteName: 'About The FemDevs',
         },
         twitter: {
             title: 'About The FemDevs',
@@ -31,8 +33,11 @@ function Section({ title, description }) {
 }
 
 export default async function Page({ params }) {
+    const { lang } = params;
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
-    const strings = await client.getStringsByLocale(params.lang);
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return notFound();
+    const strings = await client.getStringsByLocale(lang);
     return (
         <content className="flex flex-col items-center justify-center">
             <hero className="flex w-full max-w-6xl flex-row items-center justify-between p-8 md:my-16">

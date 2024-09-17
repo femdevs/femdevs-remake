@@ -1,7 +1,6 @@
 import React from "react";
-import UptimeClient from "#/src/uptime";
 import otaClient from "@crowdin/ota-client";
-
+import UptimeClient from "#/src/uptime";
 import StatusOrb from "#/components/StatusOrb";
 
 export function FooterHeader({ title }) {
