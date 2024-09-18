@@ -31,7 +31,7 @@ jobs:
         uses: snyk/actions/setup@master
       - name: Prepare Dependencies
         run: |
-          npm i @microsoft/eslint-formatter-sarif
+          npm i @microsoft/eslint-formatter-sarif --force
           mkdir cli-results
       - name: Run ESLint
         run: npx eslint . --format @microsoft/eslint-formatter-sarif > cli-results/eslint.sarif || true
