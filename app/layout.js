@@ -25,22 +25,18 @@ export const metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'The FemDevs',
-    images: [
-      {
-        href: '/opengraph-image.png',
-      },
-    ],
+    images: {
+      href: '/opengraph-image.png',
+    },
   },
   twitter: {
     card: 'summary_large_image',
     title: 'The FemDevs',
     site: '@OfficialFemDevs',
     creator: '@OfficialFemDevs',
-    images: [
-      {
-        href: '/twitter-image.png',
-      },
-    ],
+    images: {
+      href: '/twitter-image.png',
+    },
   },
   robots: {
     index: true,
