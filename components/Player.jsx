@@ -69,7 +69,7 @@ export default function Player({ user }) {
             setPlaying(spotify.song);
         };
         load();
-        const interval = setInterval(load, 1e3);
+        const interval = setInterval(load, 25e2);
         return () => clearInterval(interval);
     });
 
