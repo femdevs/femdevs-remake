@@ -60,7 +60,7 @@ export default function Player({ user }) {
 
     useEffect(() => {
         const load = async () => {
-            const data = await fetch(`http://localhost:3000/spotify/${user}/playing/`);
+            const data = await fetch(`/spotify/${user}/playing/`);
             const { isPlaying, playing: track } = await data.json();
             const spotify = new Spotify();
             spotify.setPlaying(isPlaying);
