@@ -1,7 +1,5 @@
 import otaClient from '@crowdin/ota-client';
 import { notFound } from 'next/navigation';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/react';
 
 import Nav from '#/components/Nav';
 import Footer from '#/components/Footer';
@@ -16,8 +14,6 @@ export default async function RootLayout({ children, params }) {
             <Nav lang={lang} />
             {children}
             <Footer lang={lang} />
-            <SpeedInsights />
-            <Analytics />
         </body>
     );
 }

@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { notFound } from 'next/navigation';
 import * as Supabase from '@supabase/supabase-js';
 import User from '#/src/userMgr';
 import { sendError } from '#/src/error';

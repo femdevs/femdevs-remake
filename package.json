@@ -13,28 +13,28 @@
   "author": {
     "name": "Benjamin",
     "email": "therealbenpai@gmail.com",
-    "url": "https://ben.thefemdevs.com"
+    "url": "https://thefemdevs.com/profile/ben"
   },
   "contributors": [
     {
-      "name": "Benjamin",
-      "email": "therealbenpai@gmail.com",
-      "url": "https://ben.thefemdevs.com"
-    },
-    {
       "name": "Alex",
       "email": "alex@thefemdevs.com",
-      "url": "https://alex.thefemdevs.com"
+      "url": "https://thefemdevs.com/profile/alex"
     },
     {
-      "name": "Oblong",
-      "email": "oblong@thefemdevs.com",
-      "url": "https://oblong.thefemdevs.com"
+      "name": "Benjamin",
+      "email": "therealbenpai@gmail.com",
+      "url": "https://thefemdevs.com/profile/ben"
     },
     {
       "name": "Nezha",
       "email": "nezha@thefemdevs.com",
-      "url": "https://nezha.thefemdevs.com"
+      "url": "https://thefemdevs.com/profile/nezha"
+    },
+    {
+      "name": "Oblong",
+      "email": "oblong@thefemdevs.com",
+      "url": "https://thefemdevs.com/profile/oblong"
     }
   ],
   "funding": [
@@ -99,6 +99,7 @@
     "@types/html-minifier-terser": "^7.0.2",
     "@types/nodemailer": "^6.4.14",
     "@types/ranjs": "^1.22.7",
+    "@types/react": "^18.3.8",
     "@types/showdown": "^2.0.6",
     "@types/spotify-api": "^0.0.25",
     "@types/stripe": "^8.0.417",

@@ -62,11 +62,7 @@ export default function Player({ user }) {
         const load = async () => {
             const data = await fetch(`/spotify/${user}/playing/`);
             const { isPlaying, playing: track } = await data.json();
-            const spotify = new Spotify();
-            spotify.setPlaying(isPlaying);
-            spotify.setTrack(track);
-            if (!isPlaying) return;
-            setPlaying(spotify.song);
+            if (isPlaying) return setPlaying((new Spotify()).setPlaying(isPlaying).setTrack(track).song);
         };
         load();
         const interval = setInterval(load, 25e2);
