@@ -1,12 +1,28 @@
 import otaClient from '@crowdin/ota-client';
 
 class SitemapRoute {
-    constructor(href, priority = 1, changeFrequency = 'daily', lastModified = new Date()) {
-        this.href = href;
+    constructor(href='', priority = 1, changeFrequency = 'daily', lastModified = new Date()) {
+        const formattedURL = new URL(href, 'https://thefemdevs.com');
+        this.href = formattedURL.toString();
         this.priority = priority;
         this.changeFrequency = changeFrequency;
         this.lastModified = lastModified;
-        this.alternates = {};
+        this.alternates = {
+            languages: {},
+        };
+    }
+    addLang(lang) {
+        this.alternates.languages[lang] = `/${lang}${this.href}`;
+        return this;
+    }
+    get JSON() {
+        return {
+            url: this.href,
+            priority: this.priority,
+            changeFrequency: this.changeFrequency,
+            lastModified: this.lastModified,
+            alternates: this.alternates,
+        };
     }
 }
 
@@ -33,18 +49,7 @@ export default async function sitemap() {
     ];
     /** @type {import('next').MetadataRoute.Sitemap} */
     const sitemap = [];
-    for (const link in links) {
-        const langs = {};
-        for (const lang in locales) {
-            langs[lang] = `/${lang}${link.href}`;
-        }
-        sitemap.push({
-            ...link,
-            alternates: {
-                languages: langs,
-            },
-        });
-    }
-    for (const link in otherLinks) sitemap.push(link);
+    links.forEach(link => locales.forEach(lang => link.addLang(lang)));
+    for (const link of [].concat(links, otherLinks)) sitemap.push(link.JSON);
     return sitemap;
 }
