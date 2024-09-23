@@ -3,7 +3,7 @@ import otaClient from '@crowdin/ota-client';
 class SitemapRoute {
     constructor(href='', priority = 1, changeFrequency = 'daily', lastModified = new Date()) {
         const formattedURL = new URL(href, 'https://thefemdevs.com');
-        this.href = formattedURL.toString();
+        this.href = formattedURL;
         this.priority = priority;
         this.changeFrequency = changeFrequency;
         this.lastModified = lastModified;
@@ -12,12 +12,12 @@ class SitemapRoute {
         };
     }
     addLang(lang) {
-        this.alternates.languages[lang] = `/${lang}${this.href}`;
+        this.alternates.languages[lang] = `https://${this.href.host}/${lang}${this.href.pathname}`;
         return this;
     }
     get JSON() {
         return {
-            url: this.href,
+            url: this.href.toString(),
             priority: this.priority,
             changeFrequency: this.changeFrequency,
             lastModified: this.lastModified,
