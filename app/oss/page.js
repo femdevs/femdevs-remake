@@ -20,14 +20,6 @@ export function Link({ text, href }) {
     );
 }
 
-export function Bolded({ children }) {
-    return (
-        <em className="select-none font-poppins text-xl text-neutral-900 font-bold">
-            {children}
-        </em>
-    );
-}
-
 export default async function Page() {
     return (
         <content className="flex flex-col items-center justify-center">
