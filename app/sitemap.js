@@ -36,20 +36,20 @@ export default async function sitemap() {
         new SitemapRoute('/legal/cookies', 1, 'monthly'),
         new SitemapRoute('/legal/terms', 1, 'monthly'),
         new SitemapRoute('/legal/privacy', 1, 'monthly'),
+    ];
+    const otherLinks = [
         new SitemapRoute('/oss', 1, 'monthly'),
         new SitemapRoute('/oss/contributing', 1, 'monthly'),
         new SitemapRoute('/oss/security', 1, 'monthly'),
         new SitemapRoute('/oss/contributors', 1, 'weekly'),
-    ];
-    const otherLinks = [
+        new SitemapRoute('/oss/license', 1, 'monthly'),
+        new SitemapRoute('/oss/code-of-conduct', 1, 'monthly'),
         new SitemapRoute('/profile/alex'),
         new SitemapRoute('/profile/ben'),
         new SitemapRoute('/profile/nezha'),
         new SitemapRoute('/profile/oblong'),
+        new SitemapRoute('/admin', 0, 'yearly'),
     ];
-    /** @type {import('next').MetadataRoute.Sitemap} */
-    const sitemap = [];
     links.forEach(link => locales.forEach(lang => link.addLang(lang)));
-    for (const link of [].concat(links, otherLinks)) sitemap.push(link.JSON);
-    return sitemap;
+    return [...links, ...otherLinks].map(link => link.JSON);
 }

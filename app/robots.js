@@ -10,6 +10,6 @@ export default function robots() {
                 '/spotify',
             ],
         },
-        sitemap: 'https://acme.com/sitemap.xml',
+        sitemap: 'https://thefemdevs.com/sitemap.xml',
     };
 }
