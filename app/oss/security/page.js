@@ -45,8 +45,8 @@ export default async function Page() {
                         <table className="w-full border border-neutral-900 border-collapse">
                             <thead>
                                 <tr>
-                                    <th className="border border-neutral-900"></th>
-                                    <th className="border border-neutral-900"></th>
+                                    <th className="border border-neutral-900">Version</th>
+                                    <th className="border border-neutral-900">Supported</th>
                                 </tr>
                             </thead>
                             <tbody>
