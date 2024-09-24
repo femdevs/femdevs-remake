@@ -28,7 +28,6 @@ export default async function Page() {
         process.env.SUPABASE_KEY
     );
     const { data } = await supabase.from("contributors").select("*");
-    const connection = await req.Database.pool.connect();
     return (
         <content className="flex flex-col items-center justify-center">
             <hero className="flex w-full max-w-6xl flex-row items-center justify-between p-8 md:my-16">
