@@ -37,11 +37,11 @@ export default async function Page() {
                     </div>
                     <div className="flex w-full flex-col space-y-4">
                         <Title>The following people have contributed to the website</Title>
-                        {(() => data.map(contrib => (
+                        {data.map(contrib => (
                             <Description key={Math.round(Math.random() * 1e9)}>
                                 <Link href={`https://github.com/${contrib.github}`} text={contrib.name} /> - {contrib.description}
                             </Description>
-                        )))}
+                        ))}
                     </div>
                 </div>
             </hero>
