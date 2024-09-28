@@ -1,3 +1,9 @@
+import { Axios } from 'axios';
+
+import Cache from 'node-cache';
+
+const cache = new Cache({ stdTTL: 60, checkperiod: 120 });
+
 class ResourceData {
     constructor(data) {
         this.uptime = data.availability;
@@ -8,21 +14,42 @@ class ResourceData {
 class UptimeClient {
     constructor(token) {
         this.token = token;
-    }
-    async status() {
-        const init = {
+        this.axios = new Axios({
             headers: {
+                'Cache-Control': 'no-cache',
+                Pragma: 'no-cache',
+                Expires: '0',
                 Authorization: `Bearer ${this.token}`,
             },
-        };
-        const response = await fetch(`https://betteruptime.com/api/v2/status-pages/195665/resources`, init)
-            .then(res => res.json());
+            responseType: 'json',
+        });
+    }
+    async status() {
+        const axios = new Axios({
+            headers: {
+                'Cache-Control': 'no-cache',
+                Pragma: 'no-cache',
+                Expires: '0',
+                Authorization: `Bearer ${this.token}`,
+            },
+            responseType: 'json',
+        });
+        const base = 'api/v2/status-pages/195665/resources';
+        const response = cache.get('base') || await axios.get(`https://betteruptime.com/${base}`)
+            .then(res => JSON.parse(res.data));
+        if (!cache.has('base')) cache.set('base', response);
         const resourceIDs = response.data.map(obj => obj.id);
         const resources = [];
         for (const id of resourceIDs) {
-            const { data: {attributes: attr } } = await fetch(`https://uptime.betterstack.com/api/v2/status-pages/195665/resources/${id}`, init)
-                .then(res => res.json());
-            resources.push(new ResourceData(attr));
+            if (cache.has(id)) {
+                resources.push(cache.get(id));
+                continue;
+            }
+            const { data: { attributes: attr } } = await axios.get(`https://uptime.betterstack.com/${base}/${id}`)
+                .then(res => JSON.parse(res.data));
+            const resData = new ResourceData(attr);
+            cache.set(id, resData);
+            resources.push(resData);
         }
         const keyMap = { 'up': 1, 'down': 2, 'degraded': 3, 'maintenance': 4 };
         return {

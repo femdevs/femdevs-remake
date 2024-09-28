@@ -1,7 +1,7 @@
 import ProfileImage from "#/components/ProfileImage";
 import Description from "#/components/ProfileDescription";
 import Header from "#/components/ProfileHeader";
-import Social from "#/components/ProfileSocial";
+import Icon from "#/components/ProfileSocialIcon";
 import Bold from "#/components/Bold";
 
 /** @return {import('next').Metadata} */
@@ -77,15 +77,60 @@ export default function Page() {
                         </Description>
                         <Header title="Socials" />
                         <div className="grid grid-cols-3 grid-rows-3 justify-evenly place-items-center">
-                            <Social ver={1} icon="discord" link="https://discord.com/users/1158220643616182445" title="Discord Profile" />
-                            <Social ver={1} icon="github" link="https://github.com/therealbenpai" title="GitHub Profile" />
-                            <Social ver={1} icon="spotify" link="https://open.spotify.com/user/mbvcmhkmq3rwhhrotcllhsk0q" title="Spotify Profile" />
-                            <Social ver={1} icon="code" link="https://thefemdevs.com" title="The FemDevs" />
-                            <Social ver={1} icon="users" link="https://en.pronouns.page/@therealbenpai" title="Pronouns.Page Profile" />
-                            <Social ver={1} icon="youtube" link="https://www.youtube.com/@benshawmean" title="YouTube Profile" />
-                            <Social ver={1} icon="lastfm" link="https://www.last.fm/user/therealbenpai" title="LastFM Profile" />
-                            <Social ver={2} icon="passkey" link="https://keyoxide.org/aspe:keyoxide.org:JI3O6H2RNBQYQGJCSZRZYMF7NU" title="Keyoxide Profile" />
-                            <Social ver={1} icon="envelope" link="mailto:therealbenpai@gmail.com" title="Email" />
+                            <Icon
+                                link="https://discord.com/users/1158220643616182445"
+                                pack="fa6-brands"
+                                icon="discord"
+                                title="Discord Profile"
+                            />
+                            <Icon
+                                link="https://github.com/therealbenpai"
+                                pack="fa6-brands"
+                                icon="github"
+                                title="GitHub Profile"
+                            />
+                            <Icon
+                                link="https://open.spotify.com/user/mbvcmhkmq3rwhhrotcllhsk0q"
+                                pack="fa6-brands"
+                                icon="spotify"
+                                title="Spotify Profile"
+                            />
+                            <Icon
+                                link="https://thefemdevs.com"
+                                pack="fa6-solid"
+                                icon="code"
+                                title="The FemDevs"
+                            />
+                            <Icon
+                                link="https://en.pronouns.page/@therealbenpai"
+                                pack="simple-icons"
+                                icon="pronounsdotpage"
+                                title="Pronouns.Page"
+                            />
+                            <Icon
+                                link="https://www.youtube.com/@benshawmean"
+                                pack="fa6-brands"
+                                icon="youtube"
+                                title="YouTube Profile"
+                            />
+                            <Icon
+                                link="https://www.last.fm/user/therealbenpai"
+                                pack="fa6-brands"
+                                icon="lastfm"
+                                title="LastFM Profile"
+                            />
+                            <Icon
+                                link="https://keyoxide.org/aspe:keyoxide.org:JI3O6H2RNBQYQGJCSZRZYMF7NU"
+                                pack="material-symbols"
+                                icon="passkey-rounded"
+                                title="Keyoxide Profile"
+                            />
+                            <Icon
+                                link="mailto:ben@thefemdevs.com"
+                                pack="fa6-solid"
+                                icon="envelope"
+                                title="Email"
+                            />
                         </div>
                     </div>
                 </div>

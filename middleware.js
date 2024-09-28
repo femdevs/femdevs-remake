@@ -32,8 +32,8 @@ const headers = CORS.Headers({
         new CORS.CSPObj('blockAllMixedContent', false, [], false, false, []),
         new CORS.CSPObj('styleSrc', false, ['unsafe-inline'], false, true, []),
         new CORS.CSPObj('upgradeInsecureRequests', false, [], false, false, []),
-        new CORS.CSPObj('baseUri', false, [], true, false, ['thefemdevs.com', 'security.thefemdevs.com', 'cdn.thefemdevs.com']),
-        new CORS.CSPObj('scriptSrc', false, ['unsafe-inline'], true, false,
+        new CORS.CSPObj('baseUri', false, [], true, false, ['thefemdevs.com']),
+        new CORS.CSPObj('scriptSrc', false, ['unsafe-inline', 'unsafe-eval'], true, false,
             ['blob:', ['thefemdevs.com', 'google.com', 'fontawesome.com', 'jsdelivr.net', 'preline.co'].map(CORS.WebSecurity.CD)].flat(2),
         ),
     ),
@@ -112,5 +112,8 @@ export async function middleware(request) {
         if (!user.hasPermissions(allowMgr, ...perms)) return sendError(1);
     }
     for (const [key, val] of headers) response.headers.set(key, val);
-    return NextResponse.next();
+    return NextResponse.next({
+        status: response.status,
+        headers: response.headers,
+    });
 };

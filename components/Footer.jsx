@@ -1,6 +1,5 @@
 import React from "react";
 import otaClient from "@crowdin/ota-client";
-import UptimeClient from "#/src/uptime";
 import StatusOrb from "#/components/StatusOrb";
 
 export function FooterHeader({ title }) {
@@ -24,8 +23,6 @@ export function FooterLink({ href, text, extraAttributes }) {
 export default async function Footer({ lang }) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const strings = await client.getStringsByLocale(lang);
-    const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN);
-    const uptimeData = await uptimeClient.status();
     return (
         <footer className="flex w-full justify-center bg-neutral-900 p-12 text-neutral-100">
             <div className="flex w-full max-w-6xl flex-col space-y-8 divide-y divide-neutral-700 px-8">
@@ -33,9 +30,9 @@ export default async function Footer({ lang }) {
                     <div className="flex flex-col space-y-2">
                         <FooterHeader title={strings.footer.header.about} />
                         <div className="flex flex-col space-y-0">
-                            <FooterLink href="https://thefemdevs.com/about" text={strings.footer.links.about.about} />
-                            <FooterLink href="https://thefemdevs.com/team" text={strings.footer.links.about.team} />
-                            <FooterLink href="https://thefemdevs.com/products" text={strings.footer.links.about.products} />
+                            <FooterLink href={`/${lang}/about`} text={strings.footer.links.about.about} />
+                            <FooterLink href={`/${lang}/team`} text={strings.footer.links.about.team} />
+                            <FooterLink href={`/${lang}/products`} text={strings.footer.links.about.products} />
                         </div>
                     </div>
                     <div className="flex flex-col space-y-2">
@@ -52,24 +49,24 @@ export default async function Footer({ lang }) {
                     <div className="flex flex-col space-y-2">
                         <FooterHeader title={strings.footer.header.company} />
                         <div className="flex flex-col space-y-0">
-                            <FooterLink href="https://thefemdevs.com/branding" text="Branding" />
-                            <FooterLink href="https://thefemdevs.com/careers" text="Careers" />
+                            <FooterLink href={`/${lang}/branding`} text="Branding" />
+                            <FooterLink href={`/${lang}/careers`} text="Careers" />
                             <FooterLink href="mailto:support@thefemdevs.com" text="Contact" extraAttributes={{ rel: "noreferrer", target: "_blank" }} />
                         </div>
                     </div>
                     <div className="flex flex-col space-y-2">
                         <FooterHeader title={strings.footer.header.legal} />
                         <div className="flex flex-col space-y-0">
-                            <FooterLink href="https://legal.thefemdevs.com/terms" text="Terms" />
-                            <FooterLink href="https://legal.thefemdevs.com/privacy" text="Privacy" />
-                            <FooterLink href="https://legal.thefemdevs.com/cookies" text="Cookies" />
+                            <FooterLink href="/legal/terms" text="Terms" />
+                            <FooterLink href="/legal/privacy" text="Privacy" />
+                            <FooterLink href="/legal/cookies" text="Cookies" />
                         </div>
                     </div>
                 </div>
                 <div className="flex flex-row items-center justify-between pt-8">
                     <h2 className="select-none font-poppins text-lg">FemDevs &copy; 2024</h2>
                     <div className="flex flex-row items-center justify-center space-x-4">
-                        <StatusOrb state={uptimeData.agrStatus} translations={strings.status} />
+                        <StatusOrb translations={strings.status} />
                     </div>
                 </div>
             </div>

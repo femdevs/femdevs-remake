@@ -11,7 +11,7 @@ export default async function Nav({ lang }) {
     return (
         <nav className="sticky top-0 z-30 flex flex-row items-center justify-center bg-white">
             <div className="flex w-full max-w-6xl flex-row items-center justify-between p-8">
-                <img className="h-12" src="https://thefemdevs.com/assets/images/icon" alt="FemDevs Logo" async />
+                <img className="h-12" src="/assets/images/icon" alt="FemDevs Logo" async />
                 <div className="hidden flex-row items-center space-x-6 md:flex">
                     <NavLink href={`/${lang}/`} text={strings.nav.home} />
                     <NavLink href={`/${lang}/about`} text={strings.nav.about} />

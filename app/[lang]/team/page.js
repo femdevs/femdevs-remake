@@ -3,6 +3,11 @@
 import otaClient from '@crowdin/ota-client';
 import * as Supabase from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { Icon } from '@iconify-icon/react';
+import axios from 'axios';
+import Cache from 'node-cache';
+
+const staffCache = new Cache({ stdTTL: 60, checkperiod: 120 });
 
 export async function generateMetadata({ params }) {
     /** @type {import('next').Metadata} */
@@ -28,9 +33,25 @@ export async function generateMetadata({ params }) {
 function StaffCard({ member }) {
     return (
         <a className="group flex flex-col rounded-xl bg-white transition-all hover:ring-1 hover:ring-brand-black hover:drop-shadow-xl" href={member.website}>
-            <img className="h-32 rounded-t-xl object-cover transition-all" src={member.avatarUrl} alt={`${member.displayname}'s profile picture`} type="image/webp" loading="lazy" />
+            <img
+                className="h-32 rounded-t-xl object-cover transition-all"
+                src={`https://thefemdevs.com/assets/images/grav/${member.gravatar}`}
+                alt={`${member.displayname}'s profile picture`}
+                type="image/webp"
+                loading="lazy"
+            />
             <div className="space-y-1 p-4">
-                <h4 className="select-none font-poppins text-xl font-medium text-neutral-900">{member.displayname}</h4>
+                <h4 className="select-none font-poppins text-xl font-medium text-neutral-900 flex gap-2 items-center">
+                    {member.displayname} {
+                        member.developer && (
+                            <Icon
+                                icon="eos-icons:admin-outlined"
+                                className="inline-block w-6 h-6 relative bottom-0 text-brand-black"
+                                alt="Developer"
+                                title="Developer"
+                            />
+                        )
+                    }</h4>
                 <h5 className="select-none font-poppins text-lg text-neutral-600">{member.title}</h5>
             </div>
         </a>
@@ -65,12 +86,27 @@ export default async function Page({ params }) {
         process.env.SUPABASE_KEY
     );
     const staffRoles = {};
-    const { data } = (await supabase.from("staff").select("*").eq('isstaff', true).order('id', { ascending: true }));
-    data.forEach(staff => staffRoles[staff.role] = staffRoles[staff.role] || {});
-    data.forEach((staff, index) => Object.assign(
-        staffRoles[staff.role],
-        { [index]: { ...staff, avatarUrl: `https://thefemdevs.com/assets/images/team/${staff.userid}` } },
-    ));
+    if (staffCache.has('staff')) Object.assign(staffRoles, staffCache.get('staff'));
+    else {
+        const url = new URL('https://xbrshjvntcletdswsxtq.supabase.co/rest/v1/staff');
+        url.searchParams.append('select', '*');
+        url.searchParams.append('isstaff', 'eq.true');
+        url.searchParams.append('order', 'id.asc');
+        const { data } = await axios.get(url.toString(), {
+            headers: {
+                'apikey': process.env.SUPABASE_KEY,
+                'Cache-Control': 'no-cache',
+                Expires: 0,
+                Pragma: 'no-cache',
+            },
+        });
+        data.forEach(staff => staffRoles[staff.role] = staffRoles[staff.role] || {});
+        data.forEach((staff, index) => Object.assign(
+            staffRoles[staff.role],
+            { [index]: staff },
+        ));
+        staffCache.set('staff', staffRoles);
+    }
     return (
         <content className="flex flex-col items-center justify-center">
             <div className="flex w-full max-w-6xl flex-col space-y-8 p-8 md:my-16">

@@ -1,7 +1,7 @@
 import ProfileImage from "#/components/ProfileImage";
 import Description from "#/components/ProfileDescription";
 import Header from "#/components/ProfileHeader";
-import Social from "#/components/ProfileSocial";
+import Icon from "#/components/ProfileSocialIcon";
 import Bold from "#/components/Bold";
 
 /** @return {import('next').Metadata} */
@@ -67,17 +67,72 @@ export default function Page() {
                         </Description>
                         <Header title="Socials" />
                         <div className="grid grid-cols-2 grid-rows-6 justify-evenly place-items-center md:grid-cols-6 md:grid-rows-2 sm:grid-cols-4 sm:grid-rows-3">
-                            <Social ver={1} icon="discord" link="https://discord.com/users/1112774630416076850" title="Discord Profile" />
-                            <Social ver={1} icon="instagram" link="https://www.instagram.com/auxiliaryfrfr/" title="Instagram Profile" />
-                            <Social ver={1} icon="github" link="https://github.com/auxiliaryfrfr" title="GitHub Profile" />
-                            <Social ver={1} icon="spotify" link="https://open.spotify.com/user/31a3c3jitxf3fde24p5ohiqfrmnm" title="Spotify Profile" />
-                            <Social ver={1} icon="twitter" link="https://twitter.com/auxiliaryfrfr" title="X (formerly Twitter) Profile" />
-                            <Social ver={1} icon="code" link="https://thefemdevs.com" title="The FemDevs" />
-                            <Social ver={1} icon="users" link="https://en.pronouns.page/@auxiliaryfrfr" title="Pronouns.Page" />
-                            <Social ver={1} icon="youtube" link="https://www.youtube.com/channel/UCfK45ILqng9SMe7EcCzd57g" title="YouTube Profile" />
-                            <Social ver={1} icon="snapchat" link="https://www.snapchat.com/add/auxiliaryfrfr" title="Snapchat Profile" />
-                            <Social ver={1} icon="lastfm" link="https://www.last.fm/user/auxiliaryfrfr" title="LastFM Profile" />
-                            <Social ver={1} icon="envelope" link="mailto:alex@thefemdevs.com" title="Email" />
+                            <Icon
+                                link="https://discord.com/users/1112774630416076850"
+                                pack="fa6-brands"
+                                icon="discord"
+                                title="Discord Profile"
+                            />
+                            <Icon
+                                link="https://www.instagram.com/auxiliaryfrfr/"
+                                pack="fa6-brands"
+                                icon="instagram"
+                                title="Instagram Profile"
+                            />
+                            <Icon
+                                link="https://github.com/auxiliaryfrfr"
+                                pack="fa6-brands"
+                                icon="github"
+                                title="GitHub Profile"
+                            />
+                            <Icon
+                                link="https://open.spotify.com/user/31a3c3jitxf3fde24p5ohiqfrmnm"
+                                pack="fa6-brands"
+                                icon="spotify"
+                                title="Spotify Profile"
+                            />
+                            <Icon
+                                link="https://twitter.com/auxiliaryfrfr"
+                                pack="fa6-brands"
+                                icon="twitter"
+                                title="X (formerly Twitter) Profile"
+                            />
+                            <Icon
+                                link="https://thefemdevs.com"
+                                pack="fa6-solid"
+                                icon="code"
+                                title="The FemDevs"
+                            />
+                            <Icon
+                                link="https://en.pronouns.page/@auxiliaryfrfr"
+                                pack="simple-icons"
+                                icon="pronounsdotpage"
+                                title="Pronouns.Page"
+                            />
+                            <Icon
+                                link="https://www.youtube.com/channel/UCfK45ILqng9SMe7EcCzd57g"
+                                pack="fa6-brands"
+                                icon="youtube"
+                                title="YouTube Profile"
+                            />
+                            <Icon
+                                link="https://www.snapchat.com/add/auxiliaryfrfr"
+                                pack="fa6-brands"
+                                icon="snapchat"
+                                title="Snapchat Profile"
+                            />
+                            <Icon
+                                link="https://www.last.fm/user/auxiliaryfrfr"
+                                pack="fa6-brands"
+                                icon="lastfm"
+                                title="LastFM Profile"
+                            />
+                            <Icon
+                                link="mailto:alex@thefemdevs.com"
+                                pack="fa6-solid"
+                                icon="envelope"
+                                title="Email"
+                            />
                         </div>
                     </div>
                 </div>
