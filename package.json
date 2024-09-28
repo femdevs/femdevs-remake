@@ -61,7 +61,7 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@next/third-parties": "^14.2.9",
-    "@supabase/supabase-js": "^2.45.1",
+    "@supabase/supabase-js": "^2.45.4",
     "@tailwindcss/forms": "^0.5.7",
     "@therealbenpai/webutils": "^1.2.0",
     "@therealbenpai/zdcors": "^1.3.0",
