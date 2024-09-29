@@ -31,6 +31,7 @@ export async function generateMetadata({ params }) {
 }
 
 function StaffCard({ member }) {
+    const iconClasses = 'inline-block size-6 relative bottom-0 text-brand-black';
     return (
         <a className="group flex flex-col rounded-xl bg-white transition-all hover:ring-1 hover:ring-brand-black hover:drop-shadow-xl" href={member.website}>
             <img
@@ -41,17 +42,28 @@ function StaffCard({ member }) {
                 loading="lazy"
             />
             <div className="space-y-1 p-4">
-                <h4 className="select-none font-poppins text-xl font-medium text-neutral-900 flex gap-2 items-center">
-                    {member.displayname} {
-                        member.developer && (
-                            <Icon
-                                icon="eos-icons:admin-outlined"
-                                className="inline-block w-6 h-6 relative bottom-0 text-brand-black"
-                                alt="Developer"
-                                title="Developer"
-                            />
-                        )
-                    }</h4>
+                <h4 className="select-none font-poppins text-xl font-medium text-neutral-900 flex gap-3 items-center">
+                    {member.displayname}
+                    <span className="flex gap-[6px] items-center">
+                        {
+                            member.owner && (
+                                <Icon icon="tabler:crown" className={iconClasses} alt="Owner" title="Owner" />
+                            )
+                        } {
+                            member.admin && !member.owner && (
+                                <Icon icon="material-symbols:add-moderator-outline" className={iconClasses} alt="Admin" title="Admin" />
+                            )
+                        } {
+                            member.developer && !member.owner && (
+                                <Icon icon="tabler:user-cog" className={iconClasses} alt="Developer" title="Developer" />
+                            )
+                        } {
+                            member.org && (
+                                <Icon icon="tabler:building-skyscraper" className={iconClasses} alt="Organization" title="Organization" />
+                            )
+                        }
+                    </span>
+                </h4>
                 <h5 className="select-none font-poppins text-lg text-neutral-600">{member.title}</h5>
             </div>
         </a>
@@ -69,11 +81,7 @@ function StaffSegment({ title, members }) {
     );
 }
 
-function hash(val) {
-    const hasher = crypto.createHash('md5');
-    hasher.update(val);
-    return hasher.digest().toString('utf8');
-}
+const hash = val => crypto.createHash('sha1').update(val).digest().toString('utf8');
 
 export default async function Page({ params }) {
     const { lang } = params;
@@ -101,10 +109,17 @@ export default async function Page({ params }) {
             },
         });
         data.forEach(staff => staffRoles[staff.role] = staffRoles[staff.role] || {});
-        data.forEach((staff, index) => Object.assign(
-            staffRoles[staff.role],
-            { [index]: staff },
-        ));
+        data.forEach((staff, index) => {
+            const flags = staff.flags.split(':');
+            staff.owner = flags[0] === '1';
+            staff.admin = flags[1] === '1';
+            staff.dev = flags[2] === '1';
+            staff.org = staff.role === 'Business Partners';
+            Object.assign(
+                staffRoles[staff.role],
+                { [index]: staff },
+            );
+        });
         staffCache.set('staff', staffRoles);
     }
     return (
