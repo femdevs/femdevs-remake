@@ -1,0 +1,141 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About",
+        "team": "Team",
+        "contact": "Contact"
+    },
+    "footer": {
+        "header": {
+            "about": "About",
+            "community": "Community",
+            "company": "Company",
+            "legal": "Legal"
+        },
+        "links": {
+            "about": {
+                "about": "About",
+                "team": "Team",
+                "products": "Products"
+            },
+            "community": {
+                "discord": "Discord",
+                "twitter": "Twitter",
+                "instagram": "Instagram",
+                "tiktok": "TikTok",
+                "reddit": "Reddit",
+                "femboyland": "FemboyLand"
+            },
+            "company": {
+                "branding": "Branding",
+                "careers": "Careers",
+                "contact": "Contact"
+            },
+            "legal": {
+                "terms": "Terms of Service",
+                "privacy": "Privacy Policy",
+                "cookies": "Cookies Policy"
+            }
+        }
+    },
+    "status": {
+        "prefix": "System Status: ",
+        "type": {
+            "up": "Up",
+            "down": "Down",
+            "degraded": "Degraded",
+            "maintenance": "Under Maintenance",
+            "unknown": "Unknown"
+        }
+    },
+    "home": {
+        "headliner": {
+            "title": "Transform Your Online Presence Today",
+            "desc": "Fast secure high-quality software solutions. Small business or personal needs? FemDevs's got you covered. Get started now."
+        },
+        "products": {
+            "button": "Our Products",
+            "title": "Reliable Products",
+            "api": {
+                "title": "API",
+                "desc": "Our APIs are designed to be fast and reliable for your applications."
+            },
+            "website": {
+                "title": "Websites",
+                "desc": "Our websites and other web-based applications are designed to be easy for anyone to use and remain accessible from anywhere."
+            },
+            "bot": {
+                "title": "Discord Bots",
+                "desc": "Our Discord bots are created by skilled and well-versed developers for a multitude of purposes and tasks."
+            },
+            "database": {
+                "title": "Databases",
+                "desc": "Our databases are designed with speed and security in mind for your applications."
+            }
+        },
+        "tagline": "Tired of Slow Software? Upgrade with FemDevs Today.",
+        "info": {
+            "one": {
+                "title": "Built to Scale",
+                "desc": "Our products are built to scale with your goals. Whether you're a small indie company or a large enterprise, we have an answer for you."
+            },
+            "two": {
+                "title": "Latest Technology",
+                "desc": "We use the latest applications and services to ensure that your software is fast, secure, and reliable from stage one."
+            },
+            "three": {
+                "title": "Outstanding Support",
+                "desc": "Our support team is available 24/7 to help you with any issues you may have with your software or service."
+            }
+        },
+        "contact": {
+            "button": "Contact Sales"
+        },
+        "clients": "Total Clients",
+        "uptime": "Service Uptime"
+    },
+    "about": {
+        "title": "Our Story",
+        "sections": {
+            "one": {
+                "title": "The Backstory",
+                "desc": "FemDevs is a small software development company, founded in February 2023 by Alex and Oblong. We are based in the United States, and we are dedicated to providing high-quality software solutions to small businesses and individuals. We are passionate about what we do, and we are always looking to improve our products and services. Although, we didn't start like this. Let us take you back in time."
+            },
+            "two": {
+                "title": "The Beginnings",
+                "desc": "In February 2023, we started developing discord bot to manage a personal discord server known as \"The Kingdom of Candia.\" This would be the first project that Alex and Oblong, as a team, would work on together. They would both learn a lot from this project, such as things about each other, about the open source community, and about the software development industry. This would be the project that would spark the creation of the FemDevs."
+            },
+            "three": {
+                "title": "A New Challenger Appears",
+                "desc": "A few days after the beginning of the project, a new team member would join the FemDevs, that being Benjamin. Benjamin was very skilled at programming, excelling at server-side development and database management. The team continued developing the bot in the initial language of Python, until Benjamin determined that it would be beneficial to switch to JavaScript. This would be the first of many decisions that would shape the future of the FemDevs."
+            },
+            "four": {
+                "title": "The Present",
+                "desc": "In July of 2023, we have helped over 12,000 people and started to sell high quality products. By the end of 2023, we have helped over 50,000 people. We have continued to grow and expand our services, and we are always looking for new ways to improve. We are excited to see what the future holds for FemDevs, and we are grateful for all of the support that we have received."
+            },
+            "five": {
+                "title": "The Future",
+                "desc": "We are always looking for new ways to improve our products and services, and we are excited to see what the future holds for FemDevs. We are dedicated to providing high-quality software solutions to small businesses and individuals, and we are always looking for new ways to expand our services. We are excited to see what the future holds for FemDevs, and we are grateful for all of the support that we have received."
+            }
+        }
+    },
+    "team": {
+        "desc": "",
+        "roles": {
+            "owner": "Owner",
+            "hr_dir": "Human Resources Director",
+            "hr_mgr": "Human Resources Manager",
+            "hr_mem": "Human Resources",
+            "admin": "Administrator",
+            "dev": "Developer",
+            "marketing": "Marketing",
+            "adv": "Advisor",
+            "server_mod": "Server Moderator",
+            "digital_assets": "Digital Assets Creator",
+            "social_media": "Social Media Manager",
+            "support": "Support Team Member",
+            "org_partner": "Business Partner (Organization)",
+            "other": "Other"
+        }
+    }
+}

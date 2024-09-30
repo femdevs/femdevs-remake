@@ -89,10 +89,6 @@ export default async function Page({ params }) {
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();
     const strings = await client.getStringsByLocale(lang);
-    const supabase = Supabase.createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_KEY
-    );
     const staffRoles = {};
     if (staffCache.has('staff')) Object.assign(staffRoles, staffCache.get('staff'));
     else {
@@ -102,24 +98,25 @@ export default async function Page({ params }) {
         url.searchParams.append('order', 'id.asc');
         const { data } = await axios.get(url.toString(), {
             headers: {
-                'apikey': process.env.SUPABASE_KEY,
                 'Cache-Control': 'no-cache',
                 Expires: 0,
                 Pragma: 'no-cache',
+                apikey: process.env.SUPABASE_KEY,
             },
         });
-        data.forEach(staff => staffRoles[staff.role] = staffRoles[staff.role] || {});
-        data.forEach((staff, index) => {
+        for (const staff of data) {
+            staffRoles[staff.role] = staffRoles[staff.role] || {};
             const flags = staff.flags.split(':');
             staff.owner = flags[0] === '1';
             staff.admin = flags[1] === '1';
             staff.dev = flags[2] === '1';
             staff.org = staff.role === 'Business Partners';
+            staff.title = strings.team.roles[staff.title];
             Object.assign(
                 staffRoles[staff.role],
                 { [index]: staff },
             );
-        });
+        }
         staffCache.set('staff', staffRoles);
     }
     return (
@@ -128,8 +125,7 @@ export default async function Page({ params }) {
                 <div className="flex w-full flex-col space-y-4">
                     <h1 className="select-none font-poppins text-5xl font-medium text-neutral-900">The Team</h1>
                     <h2 className="select-none font-poppins text-xl text-neutral-900">
-                        FemDevs would not be possible without the help of a number of people.
-                        We would like to thank the following people for their contributions to FemDevs.
+                        {strings.team.desc}
                     </h2>
                 </div>
                 {(() => {
