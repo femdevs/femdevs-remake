@@ -120,7 +120,7 @@
         }
     },
     "team": {
-        "desc": "",
+        "desc": "FemDevs would not be possible without the help of a number of people.\nWe would like to thank the following people for their contributions to FemDevs.",
         "roles": {
             "owner": "Owner",
             "hr_dir": "Human Resources Director",

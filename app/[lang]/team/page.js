@@ -114,7 +114,7 @@ export default async function Page({ params }) {
             staff.title = strings.team.roles[staff.title];
             Object.assign(
                 staffRoles[staff.role],
-                { [index]: staff },
+                { [staff.id]: staff },
             );
         }
         staffCache.set('staff', staffRoles);
