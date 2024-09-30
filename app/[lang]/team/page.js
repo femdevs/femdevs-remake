@@ -54,7 +54,7 @@ function StaffCard({ member }) {
                                 <Icon icon="material-symbols:add-moderator-outline" className={iconClasses} alt="Admin" title="Admin" />
                             )
                         } {
-                            member.developer && !member.owner && (
+                            member.dev && !member.owner && (
                                 <Icon icon="tabler:user-cog" className={iconClasses} alt="Developer" title="Developer" />
                             )
                         } {
