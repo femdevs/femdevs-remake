@@ -2,6 +2,7 @@
 'use server';
 import React from 'react';
 import otaClient from '@crowdin/ota-client';
+import { SignedIn, UserButton, SignedOut, SignInButton } from '@clerk/nextjs';
 
 import NavLink from '#/components/NavLink';
 
@@ -17,6 +18,12 @@ export default async function Nav({ lang }) {
                     <NavLink href={`/${lang}/about`} text={strings.nav.about} />
                     <NavLink href={`/${lang}/team`} text={strings.nav.team} />
                     <NavLink href="mailto:support@thefemdevs.com" text={strings.nav.contact} extraAttributes={{ rel: "noreferrer", target: "_blank" }} />
+                    <SignedIn>
+                        <UserButton />
+                    </SignedIn>
+                    <SignedOut>
+                        <SignInButton />
+                    </SignedOut>
                 </div>
             </div>
         </nav>

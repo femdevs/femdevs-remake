@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import * as Supabase from '@supabase/supabase-js';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import User from '#/src/userMgr';
 import { sendError } from '#/src/error';
 import * as CORS from '#/src/cors';
@@ -83,10 +84,10 @@ const supabase = Supabase.createClient(
     process.env.SUPABASE_KEY
 );
 
-export const config = {};
+const isProtectedRoute = createRouteMatcher(['/admin/(.*)', '/dashboard/(.*)']);
 
 /** @type {import('next/server').NextMiddleware} */
-export async function middleware(request) {
+async function middleware(request) {
     const response = new NextResponse(null);
     const path = request.nextUrl.pathname;
     if (path.startsWith('/api')) {
@@ -116,4 +117,19 @@ export async function middleware(request) {
         status: response.status,
         headers: response.headers,
     });
+};
+
+export default clerkMiddleware(async (auth, req) => {
+    if (isProtectedRoute(req)) await auth.protect(has => {
+        neededPerms = ['org:sys_memberships:manage', 'org:sys_domains_manage'];
+        return neededPerms.some(v => has({ permission: v }));;
+    });
+
+    return await middleware(req);
+});
+
+
+
+export const config = {
+    matcher: '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
 };

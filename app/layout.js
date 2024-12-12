@@ -2,6 +2,7 @@ import './globals.css';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
+import { ClerkProvider } from '@clerk/nextjs';
 
 /** @type {import('next').Metadata} */
 export const metadata = {
@@ -49,13 +50,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        <script async src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
-      </head>
-      <SpeedInsights />
-      <Analytics />
-      {children}
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <head>
+          <script async src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
+        </head>
+        <SpeedInsights />
+        <Analytics />
+        {children}
+      </html>
+    </ClerkProvider>
   );
 }
