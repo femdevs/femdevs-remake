@@ -5,7 +5,7 @@ import Nav from '#/components/Nav';
 import Footer from '#/components/Footer';
 
 export default async function RootLayout({ children, params }) {
-    const { lang } = params;
+    const { lang } = await params;
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();

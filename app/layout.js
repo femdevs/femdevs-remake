@@ -3,6 +3,7 @@ import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import { ClerkProvider } from '@clerk/nextjs';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 /** @type {import('next').Metadata} */
 export const metadata = {
@@ -55,6 +56,7 @@ export default function RootLayout({ children }) {
         <head>
           <script async src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
         </head>
+        <GoogleAnalytics gaId='G-X9E281G0P3' />
         <SpeedInsights />
         <Analytics />
         {children}

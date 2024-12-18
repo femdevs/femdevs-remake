@@ -93,7 +93,7 @@ const supabase = Supabase.createClient(
     process.env.SUPABASE_KEY
 );
 
-const isProtectedRoute = createRouteMatcher(['/admin/(.*)', '/dashboard/(.*)']);
+const isProtectedRoute = createRouteMatcher(['/admin', '/admin/(.*)']);
 
 /** @type {import('next/server').NextMiddleware} */
 async function middleware(request) {
@@ -130,7 +130,7 @@ async function middleware(request) {
 
 export default clerkMiddleware(async (auth, req) => {
     if (isProtectedRoute(req)) await auth.protect(has => {
-        neededPerms = ['org:sys_memberships:manage', 'org:sys_domains_manage'];
+        const neededPerms = ['org:sys_memberships:manage', 'org:sys_domains:manage'];
         return neededPerms.some(v => has({ permission: v }));;
     });
 
