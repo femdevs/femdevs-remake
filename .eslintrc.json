@@ -1,5 +1,6 @@
 {
   "extends": "next/core-web-vitals",
+  "ignorePatterns": ["**/origin/*"],
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
     "arrow-parens": ["error", "as-needed"],
