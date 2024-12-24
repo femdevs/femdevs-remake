@@ -42,7 +42,7 @@ export default async function Page({ params }: BaseReactProps) {
             </div>
             <div className="flex items-center justify-center min-h-screen">
                 <Player
-                    user={params.name}
+                    user={params!.name}
                 />
             </div>
         </body>
