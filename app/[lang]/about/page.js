@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 
 import genMeta from '#/src/generateMetadata';
 
+const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
+
 export async function generateMetadata({ params }) {
     const { lang } = await params;
         const locales = await client.listLanguages();
@@ -38,7 +40,6 @@ function Section({ title, description }) {
 
 export default async function Page({ params }) {
     const { lang } = params;
-    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();
     const strings = await client.getStringsByLocale(lang);

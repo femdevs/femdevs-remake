@@ -9,6 +9,7 @@ import Cache from 'node-cache';
 import genMeta from '#/src/generateMetadata';
 
 const staffCache = new Cache({ stdTTL: 60, checkperiod: 120 });
+const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
 
 export async function generateMetadata({ params }) {
     /** @type {import('next').Metadata} */
@@ -88,7 +89,6 @@ const hash = val => crypto.createHash('sha1').update(val).digest().toString('utf
 
 export default async function Page({ params }) {
     const { lang } = params;
-    const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();
     const strings = await client.getStringsByLocale(lang);
