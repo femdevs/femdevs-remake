@@ -1,33 +1,36 @@
 'use server';
 /* eslint-disable @next/next/no-img-element */
 import otaClient from '@crowdin/ota-client';
-import * as Supabase from '@supabase/supabase-js';
 import crypto from 'crypto';
 import { Icon } from '@iconify-icon/react';
 import axios from 'axios';
 import Cache from 'node-cache';
 
+import genMeta from '#/src/generateMetadata';
+
 const staffCache = new Cache({ stdTTL: 60, checkperiod: 120 });
 
 export async function generateMetadata({ params }) {
     /** @type {import('next').Metadata} */
-    return {
+    const { lang } = await params;
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
+    return genMeta({
         title: 'Team',
-        description: 'About The FemDevs Team',
+        description: 'About the FemDevs Team',
         alternates: {
-            canonical: `/${params.lang}/team`,
+            canonical: `/${await params.lang}/team`,
         },
         openGraph: {
-            title: 'About The FemDevs Team',
-            description: 'About The FemDevs Team',
-            url: `/${params.lang}/team`,
-            siteName: 'About The FemDevs Team',
+            title: 'About the FemDevs Team',
+            description: 'About the FemDevs Team',
+            url: `/${await params.lang}/team`,
         },
         twitter: {
-            title: 'About The FemDevs Team',
-            description: 'About The FemDevs Team',
+            title: 'About the FemDevs Team',
+            description: 'About the FemDevs Team',
         },
-    };
+    });
 }
 
 function StaffCard({ member }) {

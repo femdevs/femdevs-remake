@@ -7,28 +7,30 @@ import ServicesAbout from '#/components/ServicesAbout';
 import LFV from '#/components/LFV';
 import UptimeClient from '#/src/uptime';
 
+import genMeta from '#/src/generateMetadata';
+
 const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
 
 export async function generateMetadata({ params }) {
     const { lang } = await params;
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
-    return {
+    return genMeta({
         title: 'Homepage',
         description: 'The homepage of The FemDevs',
         alternates: {
-            canonical: `/${params.lang}`,
+            canonical: `/${await params.lang}`,
         },
         openGraph: {
             title: 'The FemDevs Homepage',
             description: 'The homepage of The FemDevs',
-            url: `/${params.lang}`,
+            url: `/${await params.lang}`,
         },
         twitter: {
             title: 'The FemDevs Homepage',
             description: 'The homepage of The FemDevs',
         },
-    };
+    });
 }
 
 export default async function Page({ params }) {

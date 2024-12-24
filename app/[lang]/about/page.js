@@ -3,24 +3,28 @@
 import otaClient from '@crowdin/ota-client';
 import { notFound } from 'next/navigation';
 
+import genMeta from '#/src/generateMetadata';
+
 export async function generateMetadata({ params }) {
-    return {
-        title: 'About Us',
-        description: 'About The FemDevs',
-        alternates: {
-            canonical: `/${params.lang}/about`,
-        },
-        openGraph: {
-            title: 'About The FemDevs',
+    const { lang } = await params;
+        const locales = await client.listLanguages();
+        if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
+        return genMeta({
+            title: 'About Us',
             description: 'About The FemDevs',
-            url: `/${params.lang}/about`,
-            siteName: 'About The FemDevs',
-        },
-        twitter: {
-            title: 'About The FemDevs',
-            description: 'About The FemDevs',
-        },
-    };
+            alternates: {
+                canonical: `/${await params.lang}/about`,
+            },
+            openGraph: {
+                title: 'About The FemDevs',
+                description: 'About The FemDevs',
+                url: `/${await params.lang}/about`,
+            },
+            twitter: {
+                title: 'About The FemDevs',
+                description: 'About The FemDevs',
+            },
+        });
 }
 
 function Section({ title, description }) {
@@ -42,7 +46,7 @@ export default async function Page({ params }) {
         <content className="flex flex-col items-center justify-center">
             <hero className="flex w-full max-w-6xl flex-row items-center justify-between p-8 md:my-16">
                 <div className="flex w-full flex-col space-y-4">
-                    <img className="w-full rounded-xl object-cover transition-all" src="https://thefemdevs.com/assets/images/deficon" alt="FemDevs Logo" async="" />
+                    <img className="w-full rounded-xl object-cover transition-all" src="https://thefemdevs.com/assets/images/deficon" alt="FemDevs Logo" async />
                     <h1 className="select-none font-poppins text-5xl font-medium text-neutral-900">
                         {strings.about.title}
                     </h1>
