@@ -2,34 +2,36 @@
 /* eslint-disable @next/next/no-img-element */
 import otaClient from '@crowdin/ota-client';
 import { notFound } from 'next/navigation';
+import { BaseReactProps } from "lib/m/types";
 
 import genMeta from '#/src/generateMetadata';
 
-const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
+const client = new otaClient(process.env.CROWDIN_DISTRO_ID!);
 
-export async function generateMetadata({ params }) {
-    const { lang } = await params;
-        const locales = await client.listLanguages();
-        if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
-        return genMeta({
-            title: 'About Us',
+export async function generateMetadata({ params }: BaseReactProps) {
+    if (!params) return { title: { absolute: '404 Not Found' } };
+    const lang = await params!.lang!;
+    const locales = await client.listLanguages();
+    if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
+    return genMeta({
+        title: 'About Us',
+        description: 'About The FemDevs',
+        alternates: {
+            canonical: `/${lang}/about`,
+        },
+        openGraph: {
+            title: 'About The FemDevs',
             description: 'About The FemDevs',
-            alternates: {
-                canonical: `/${await params.lang}/about`,
-            },
-            openGraph: {
-                title: 'About The FemDevs',
-                description: 'About The FemDevs',
-                url: `/${await params.lang}/about`,
-            },
-            twitter: {
-                title: 'About The FemDevs',
-                description: 'About The FemDevs',
-            },
-        });
+            url: `/${lang}/about`,
+        },
+        twitter: {
+            title: 'About The FemDevs',
+            description: 'About The FemDevs',
+        },
+    });
 }
 
-function Section({ title, description }) {
+function Section({ title, description }: BaseReactProps<{ title: string, description: string }>) {
     return (
         <>
             <h2 className="select-none font-poppins text-3xl font-medium text-neutral-900">{title}</h2>
@@ -38,8 +40,9 @@ function Section({ title, description }) {
     );
 }
 
-export default async function Page({ params }) {
-    const { lang } = params;
+export default async function Page({ params }: BaseReactProps) {
+    if (!params) return notFound();
+    const lang = await params!.lang!;
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();
     const strings = await client.getStringsByLocale(lang);

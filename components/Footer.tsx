@@ -3,7 +3,7 @@ import otaClient from "@crowdin/ota-client";
 import StatusOrb from "#/components/StatusOrb";
 import { BaseReactProps } from "lib/m/types";
 
-export function FooterHeader({ title }: BaseReactProps & { title: string }) {
+export function FooterHeader({ title }: BaseReactProps<{ title: string }>) {
     return (
         <h2 className="select-none font-poppins text-xl font-medium">
             {title}
@@ -11,7 +11,7 @@ export function FooterHeader({ title }: BaseReactProps & { title: string }) {
     );
 }
 
-export function FooterLink({ href, text, extraAttributes }: BaseReactProps & { href: string, text: string, extraAttributes?: Record<string, string> }) {
+export function FooterLink({ href, text, extraAttributes }: BaseReactProps<{ href: string, text: string, extraAttributes?: Record<string, string>}>) {
     return (
         <a
             className="select-none font-poppins text-lg text-neutral-100 transition-all hover:text-neutral-300"
@@ -21,7 +21,7 @@ export function FooterLink({ href, text, extraAttributes }: BaseReactProps & { h
     );
 }
 
-export default async function Footer({ lang }: BaseReactProps & { lang: string }) {
+export default async function Footer({ lang }: BaseReactProps<{ lang: string }>) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID!);
     const strings = await client.getStringsByLocale(lang);
     return (

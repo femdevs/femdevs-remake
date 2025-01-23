@@ -1,7 +1,7 @@
 import UptimeClient from "#/src/uptime";
 import { BaseReactProps } from "lib/m/types";
 
-export default async function StatusOrb({ translations }: { translations: Record<string, any> } & BaseReactProps) {
+export default async function StatusOrb({ translations }: BaseReactProps<{ translations: Record<string, any> }>) {
     const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN!);
     const uptimeData = await uptimeClient.status();
     const States = [

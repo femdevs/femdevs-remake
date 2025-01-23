@@ -1,4 +1,6 @@
-export function Title({ children }) {
+import { BaseReactProps } from "lib/m/types";
+
+function Header({ children }: BaseReactProps) {
     return (
         <h2 className="select-none font-poppins text-3xl font-bold text-neutral-900">
             {children}
@@ -6,7 +8,7 @@ export function Title({ children }) {
     );
 }
 
-export function Description({ children }) {
+function Description({ children }: BaseReactProps) {
     return (
         <p className="select-none font-poppins text-xl text-neutral-900">
             {children}
@@ -14,13 +16,13 @@ export function Description({ children }) {
     );
 }
 
-export function Link({ text, href }) {
+function Link({ text, href }: BaseReactProps<{ text: string, href: string }>) {
     return (
         <a className="font-bold text-cyan-700" href={href} target="_blank">{text}</a>
     );
 }
 
-export function Bolded({ children }) {
+function Bolded({ children }: BaseReactProps) {
     return (
         <em className="select-none font-poppins text-xl text-neutral-900 font-bold">
             {children}
@@ -38,9 +40,9 @@ export default async function Page() {
                         <p className="select-none font-poppins text-xl text-neutral-900">Last Updated 11th February 2024</p>
                     </div>
                     <div className="flex w-full flex-col space-y-4">
-                        <Title>
+                        <Header>
                             How to Contribute to the Repository
-                        </Title>
+                        </Header>
                         <Description>
                             To contribute to this repository, please follow the following steps:
                         </Description>

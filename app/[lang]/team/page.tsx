@@ -5,15 +5,18 @@ import crypto from 'crypto';
 import { Icon } from '@iconify-icon/react';
 import axios from 'axios';
 import Cache from 'node-cache';
+import { notFound } from 'next/navigation';
 
 import genMeta from '#/src/generateMetadata';
+import { BaseReactProps } from "lib/m/types";
 
 const staffCache = new Cache({ stdTTL: 60, checkperiod: 120 });
-const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
+const client = new otaClient(process.env.CROWDIN_DISTRO_ID!);
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }: BaseReactProps) {
     /** @type {import('next').Metadata} */
-    const { lang } = await params;
+    if (!params) return { title: { absolute: '404 Not Found' } };
+    const lang = await params!.lang!;
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
     return genMeta({
@@ -34,7 +37,7 @@ export async function generateMetadata({ params }) {
     });
 }
 
-function StaffCard({ member }) {
+function StaffCard({ member }: BaseReactProps<{ member: Record<string, any> }>) {
     const iconClasses = 'inline-block size-6 relative bottom-0 text-brand-black';
     return (
         <a className="group flex flex-col rounded-xl bg-white transition-all hover:ring-1 hover:ring-brand-black hover:drop-shadow-xl" href={member.website}>
@@ -74,7 +77,7 @@ function StaffCard({ member }) {
     );
 }
 
-function StaffSegment({ title, members }) {
+function StaffSegment({ title, members }: BaseReactProps<{ title: string, members: Record<string, any>[] }>) {
     return (
         <div className="flex flex-col space-y-6">
             <h3 className="select-none font-poppins text-3xl font-medium text-neutral-900">{title}</h3>
@@ -85,14 +88,29 @@ function StaffSegment({ title, members }) {
     );
 }
 
-const hash = val => crypto.createHash('sha1').update(val).digest().toString('utf8');
+const hash = (val: string) => crypto.createHash('sha1').update(val).digest().toString('utf8');
 
-export default async function Page({ params }) {
-    const { lang } = params;
+interface StaffMember {
+    id: string;
+    displayname: string;
+    role: string;
+    title: string;
+    flags: string;
+    gravatar: string;
+    website: string;
+    owner: boolean;
+    admin: boolean;
+    dev: boolean;
+    org: boolean;
+}
+
+export default async function Page({ params }: BaseReactProps) {
+    if (!params) return notFound();
+    const lang = await params!.lang!;
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();
     const strings = await client.getStringsByLocale(lang);
-    const staffRoles = {};
+    const staffRoles = {} as Record<string, Record<string, StaffMember>>;
     if (staffCache.has('staff')) Object.assign(staffRoles, staffCache.get('staff'));
     else {
         const url = new URL('https://xbrshjvntcletdswsxtq.supabase.co/rest/v1/staff');
@@ -107,7 +125,7 @@ export default async function Page({ params }) {
                 apikey: process.env.SUPABASE_KEY,
             },
         });
-        for (const staff of data) {
+        for (const staff of data as StaffMember[]) {
             staffRoles[staff.role] = staffRoles[staff.role] || {};
             const flags = staff.flags.split(':');
             staff.owner = flags[0] === '1';

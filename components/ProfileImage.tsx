@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { BaseReactProps } from "lib/m/types";
 
-export default function ProfileImage({ link, name }: BaseReactProps & { link: string, name: string }) {
+export default function ProfileImage({ link, name }: BaseReactProps<{ link: string, name: string }>) {
     return (
         <div className="flex flex-col items-center justify-center">
             <img

@@ -53,7 +53,7 @@ class Spotify {
     setTrack = (song: Record<string, any>) => Object.assign(this, { song });
 }
 
-export default function Player({ user }: BaseReactProps & { user: string }) {
+export default function Player({ user }: BaseReactProps<{ user: string }>) {
     const [playing, setPlaying] = useState({
         track: { title: "Nothing playing", url: null },
         album: { title: "Nothing", artists: [], image: "https://via.placeholder.com/300" },

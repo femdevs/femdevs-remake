@@ -1,6 +1,7 @@
 import OSSEnforcement from '#/components/OSSEnforcement';
+import { BaseReactProps } from "lib/m/types";
 
-export function Title({ children }) {
+function Header({ children }: BaseReactProps) {
     return (
         <h2 className="select-none font-poppins text-3xl font-bold text-neutral-900">
             {children}
@@ -8,7 +9,7 @@ export function Title({ children }) {
     );
 }
 
-export function Description({ children }) {
+function Description({ children }: BaseReactProps) {
     return (
         <p className="select-none font-poppins text-xl text-neutral-900">
             {children}
@@ -26,39 +27,39 @@ export default async function Page() {
                         <p className="select-none font-poppins text-xl text-neutral-900">Last Updated 11th February 2024</p>
                     </div>
                     <div className="flex w-full flex-col space-y-4">
-                        <Title>Our Pledge</Title>
+                        <Header>Our Pledge</Header>
                         <Description>
                             We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
                         </Description>
                         <Description>
                             We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
                         </Description>
-                        <Title>Our Standards</Title>
+                        <Header>Our Standards</Header>
                         <Description>
                             Examples of behavior that contributes to a positive environment for our community include: Demonstrating empathy and kindness toward other people, being respectful of differing opinions, viewpoints, and experiences, giving and gracefully accepting constructive feedback, accepting responsibility and apologizing to those affected by our mistakes and learning from the experience, and focusing on what is best not just for us as individuals, but for the overall community
                         </Description>
                         <Description>
                             Examples of unacceptable behavior include: The use of sexualized language or imagery, and sexual attention or advances of any kind, trolling, insulting or derogatory comments, and personal or political attacks, public or private harassment, publishing others&apos; private information, such as a physical or email address, without their explicit permission, and other conduct which could reasonably be considered inappropriate in a professional setting
                         </Description>
-                        <Title>Enforcement Responsibilities</Title>
+                        <Header>Enforcement Responsibilities</Header>
                         <Description>
                             Community leaders are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
                         </Description>
                         <Description>
                             Community leaders have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
                         </Description>
-                        <Title>Scope</Title>
+                        <Header>Scope</Header>
                         <Description>
                             This Code of Conduct applies within all community spaces, and also applies when an individual is officially representing the community in public spaces. Examples of representing our community include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.
                         </Description>
-                        <Title>Enforcement</Title>
+                        <Header>Enforcement</Header>
                         <Description>
                             Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at admin@thefemdevs.com. All complaints will be reviewed and investigated promptly and fairly.
                         </Description>
                         <Description>
                             All community leaders are obligated to respect the privacy and security of the reporter of any incident.
                         </Description>
-                        <Title>Enforcement Guidelines</Title>
+                        <Header>Enforcement Guidelines</Header>
                         <Description>
                             Community leaders will follow these Community Impact Guidelines in determining the consequences for any action they deem in violation of this Code of Conduct:
                         </Description>
@@ -82,7 +83,7 @@ export default async function Page() {
                             impact="Demonstrating a pattern of violation of community standards, including sustained inappropriate behavior, harassment of an individual, or aggression toward or disparagement of classes of individuals."
                             consequence="A permanent ban from any sort of public interaction within the community."
                         />
-                        <Title>Attribution</Title>
+                        <Header>Attribution</Header>
                         <Description>
                             This Code of Conduct is adapted from the Contributor Covenant, version 2.0, available at <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct.html" target="_blank" className="text-cyan-700">https://www.contributor-covenant.org/version/2/0/code_of_conduct.html</a>.
                         </Description>

@@ -1,6 +1,7 @@
 import * as Supabase from '@supabase/supabase-js';
+import { BaseReactProps } from "lib/m/types";
 
-export function Title({ children }) {
+function Header({ children }: BaseReactProps) {
     return (
         <h2 className="select-none font-poppins text-3xl font-bold text-neutral-900">
             {children}
@@ -8,7 +9,7 @@ export function Title({ children }) {
     );
 }
 
-export function Description({ children }) {
+function Description({ children }: BaseReactProps) {
     return (
         <p className="select-none font-poppins text-xl text-neutral-900">
             {children}
@@ -16,18 +17,25 @@ export function Description({ children }) {
     );
 }
 
-export function Link({ text, href }) {
+function Link({ text, href }: BaseReactProps<{ text: string, href: string }>) {
     return (
         <a className="font-bold text-cyan-700" href={href} target="_blank">{text}</a>
     );
 }
 
+interface Contributor {
+    name: string;
+    github: string;
+    description: string;
+}
+
 export default async function Page() {
     const supabase = Supabase.createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_KEY
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_KEY!
     );
     const { data } = await supabase.from("contributors").select("*");
+    if (!data) return null;
     return (
         <content className="flex flex-col items-center justify-center">
             <hero className="flex w-full max-w-6xl flex-row items-center justify-between p-8 md:my-16">
@@ -36,7 +44,7 @@ export default async function Page() {
                         <h1 className="select-none font-poppins text-5xl font-bold text-neutral-900">Contributors</h1>
                     </div>
                     <div className="flex w-full flex-col space-y-4">
-                        <Title>The following people have contributed to the website</Title>
+                        <Header>The following people have contributed to the website</Header>
                         {data.map(contrib => (
                             <Description key={Math.round(Math.random() * 1e9)}>
                                 <Link href={`https://github.com/${contrib.github}`} text={contrib.name} /> - {contrib.description}

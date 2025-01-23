@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 'use server';
 import React from 'react';
-import otaClient from '@crowdin/ota-client';
 import { SignedIn, UserButton, SignedOut, SignInButton } from '@clerk/nextjs';
+import otaClient from '@crowdin/ota-client';
 
 import NavLink from '#/components/NavLink';
 import { BaseReactProps } from "lib/m/types";
 
-export default async function Nav({ lang }: BaseReactProps & { lang: string }) {
+export default async function Nav({ lang }: BaseReactProps<{ lang: string }>) {
     const client = new otaClient(process.env.CROWDIN_DISTRO_ID!);
     const strings = await client.getStringsByLocale(lang);
     return (

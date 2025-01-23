@@ -1,6 +1,7 @@
 import SecuritySupport from '#/components/SecuritySupport';
+import { BaseReactProps } from "lib/m/types";
 
-export function Title({ children }) {
+function Header({ children }: BaseReactProps) {
     return (
         <h2 className="select-none font-poppins text-3xl font-bold text-neutral-900">
             {children}
@@ -8,7 +9,7 @@ export function Title({ children }) {
     );
 }
 
-export function Description({ children }) {
+function Description({ children }: BaseReactProps) {
     return (
         <p className="select-none font-poppins text-xl text-neutral-900">
             {children}
@@ -16,13 +17,13 @@ export function Description({ children }) {
     );
 }
 
-export function Link({ text, href }) {
+function Link({ text, href }: BaseReactProps<{ text: string, href: string }>) {
     return (
         <a className="font-bold text-cyan-700" href={href} target="_blank">{text}</a>
     );
 }
 
-export function Bolded({ children }) {
+function Bolded({ children }: BaseReactProps) {
     return (
         <em className="select-none font-poppins text-xl text-neutral-900 font-bold">
             {children}
@@ -40,7 +41,7 @@ export default async function Page() {
                         <Description>Last Updated 11th February 2024</Description>
                     </div>
                     <div className="flex w-full flex-col space-y-4">
-                        <Title>Supported Versions</Title>
+                        <Header>Supported Versions</Header>
                         <Description>The following versions of the website have accepted security policies</Description>
                         <table className="w-full border border-neutral-900 border-collapse">
                             <thead>
@@ -64,7 +65,7 @@ export default async function Page() {
                         </table>
                     </div>
                     <div className="flex w-full flex-col space-y-4">
-                        <Title>Reporting a Vulnerability</Title>
+                        <Header>Reporting a Vulnerability</Header>
                         <Description>To report a vulnerability, please contact the administrative team at <Link href="mailto:admin@thefemdevs.com" text="admin@thefemdevs.com"/></Description>
                     </div>
                 </div>

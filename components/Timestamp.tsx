@@ -1,7 +1,7 @@
 'use client';
 import { BaseReactProps } from 'lib/m/types';
 
-export default function Timestamp({ time }: { time: number } & BaseReactProps) {
+export default function Timestamp({ time }: BaseReactProps<{ time: number }>) {
     const pad = (num: number) => num.toString().padStart(2, '0');
     return (
         <p className="text-white">

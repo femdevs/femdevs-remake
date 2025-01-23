@@ -2,6 +2,8 @@
 import otaClient from '@crowdin/ota-client';
 import { notFound } from 'next/navigation';
 import { Icon } from '@iconify-icon/react';
+import { BaseReactProps } from "lib/m/types";
+
 
 import ServicesAbout from '#/components/ServicesAbout';
 import LFV from '#/components/LFV';
@@ -9,10 +11,11 @@ import UptimeClient from '#/src/uptime';
 
 import genMeta from '#/src/generateMetadata';
 
-const client = new otaClient(process.env.CROWDIN_DISTRO_ID);
+const client = new otaClient(process.env.CROWDIN_DISTRO_ID!);
 
-export async function generateMetadata({ params }) {
-    const { lang } = await params;
+export async function generateMetadata({ params }: BaseReactProps) {
+    if (!params) return { title: { absolute: '404 Not Found' } };
+    const lang = await params!.lang!;
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return { title: { absolute: '404 Not Found' } };
     return genMeta({
@@ -33,12 +36,13 @@ export async function generateMetadata({ params }) {
     });
 }
 
-export default async function Page({ params }) {
-    const { lang } = await params;
+export default async function Page({ params }: BaseReactProps) {
+    if (!params) return notFound();
+    const lang = await params!.lang!;
     const locales = await client.listLanguages();
     if (!locales.includes(lang)) return notFound();
     const strings = await client.getStringsByLocale(lang);
-    const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN);
+    const uptimeClient = new UptimeClient(process.env.BETTER_STACK_TOKEN!);
     const uptimeData = await uptimeClient.status();
     return (
         <content className="flex flex-col items-center justify-center">

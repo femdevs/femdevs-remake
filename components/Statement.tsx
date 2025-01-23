@@ -1,6 +1,6 @@
 import { BaseReactProps } from "lib/m/types";
 
-export default function Statement({ main, sub }: { main: string; sub?: string } & BaseReactProps) {
+export default function Statement({ main, sub }: BaseReactProps<{ main: string; sub?: string }>) {
     return (
         <>
             <h2 className="select-none font-poppins text-3xl font-medium text-neutral-900">{main}</h2>

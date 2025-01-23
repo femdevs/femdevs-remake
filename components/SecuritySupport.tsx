@@ -1,6 +1,6 @@
 import { BaseReactProps } from "lib/m/types";
 
-export default function SecuritySupport({ ver, supported, type }: BaseReactProps & { ver: string, supported: boolean, type: number }) {
+export default function SecuritySupport({ ver, supported, type }: BaseReactProps<{ ver: string, supported: boolean, type: number }>) {
     const Types = ['>', '>=', '<', '<=', '^', '~'];
     const ftype = Types[type] || '';
     const fsupported = supported ? '✅' : '❌';

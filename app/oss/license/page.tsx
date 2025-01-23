@@ -1,4 +1,6 @@
-export function Title({ children }) {
+import { BaseReactProps } from "lib/m/types";
+
+function Header({ children }: BaseReactProps) {
     return (
         <h2 className="select-none font-poppins text-3xl font-bold text-neutral-900">
             {children}
@@ -6,7 +8,7 @@ export function Title({ children }) {
     );
 }
 
-export function SmallerTitle({ children }) {
+function SmallerTitle({ children }: BaseReactProps) {
     return (
         <h2 className="select-none font-poppins text-2xl font-bold text-neutral-900">
             {children}
@@ -14,7 +16,7 @@ export function SmallerTitle({ children }) {
     );
 }
 
-export function Subtitle({ children }) {
+function Subtitle({ children }: BaseReactProps) {
     return (
         <h3 className="select-none font-poppins text-xl text-neutral-900 font-semibold">
             {children}
@@ -22,7 +24,7 @@ export function Subtitle({ children }) {
     );
 }
 
-export function Description({ children }) {
+function Description({ children }: BaseReactProps) {
     return (
         <p className="select-none font-poppins text-xl text-neutral-900">
             {children}
@@ -30,13 +32,13 @@ export function Description({ children }) {
     );
 }
 
-export function Link({ text, href }) {
+function Link({ text, href }: BaseReactProps<{ text: string, href: string }>) {
     return (
         <a className="font-bold text-cyan-700" href={href} target="_blank">{text}</a>
     );
 }
 
-export function Bolded({ children }) {
+function Bolded({ children }: BaseReactProps) {
     return (
         <em className="select-none font-poppins text-xl text-neutral-900 font-bold">
             {children}
@@ -55,12 +57,12 @@ export default async function Page() {
                         <Description>GNU Affero General Public License v3</Description>
                     </div>
                     <div className="flex w-full flex-col space-y-4">
-                        <Title>License Information</Title>
+                        <Header>License Information</Header>
                         <Description>This repository is licensed under the GNU Affero General Public License v3.</Description>
                         <Description>This means that you are free to use, modify, and distribute the code as long as you provide the same rights to others and state the changes you have made.</Description>
                         <Description>For more information, please visit the <Link href="https://www.gnu.org/licenses/agpl-3.0.html" text="Affero General Public License v3" /> website.</Description>
                         <div className="flex w-full flex-col space-y-4">
-                            <Title>Full Text</Title>
+                            <Header>Full Text</Header>
                         </div>
                         <div className="flex w-full flex-col space-y-4">
                             <SmallerTitle>
